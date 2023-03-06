@@ -3,10 +3,12 @@ export type GetCityNameParams = {
   longitude: number;
 };
 
-export type GetCurrentWeatherResponse = {
+export type Location = {
   country: string;
   lat: number;
   lon: number;
   name: string;
   state: string;
-}[];
+};
+
+export type GetLocationResponse = Location[];
