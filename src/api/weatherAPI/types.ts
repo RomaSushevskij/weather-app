@@ -8,9 +8,7 @@ export type GetCurrentWeatherParams = {
   date2?: number;
 };
 
-type WeatherCondition = {
-  conditions: string;
-  feelslike: number;
+export type WeatherCondition = {
   icon: weatherIcons;
   temp: number;
   datetimeEpoch: number;
