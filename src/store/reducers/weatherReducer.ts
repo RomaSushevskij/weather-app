@@ -27,12 +27,12 @@ const initialState = {
   }[],
 };
 
-type InitialStateType = typeof initialState;
+type WeatherInitialState = typeof initialState;
 
 export const weatherReducer = (
   action: WeatherActionsType,
-  state: InitialStateType = initialState,
-): InitialStateType => {
+  state: WeatherInitialState = initialState,
+): WeatherInitialState => {
   switch (action.type) {
     case WEATHER_ACTIONS_TYPE.SET_LOCATION: {
       const { lat: latitude, lon: longitude, country, name: cityName } = action.payload;
