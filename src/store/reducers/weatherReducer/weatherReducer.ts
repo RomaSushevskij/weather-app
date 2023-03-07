@@ -1,12 +1,14 @@
 import { WeatherCondition } from 'api';
 import { Location } from 'api/geocodingAPI/types';
 import { weatherIcons } from 'api/weatherAPI/enums';
-import { WeatherACReturned } from 'store/reducers/types';
+import { WeatherACReturned } from 'store/reducers/weatherReducer/types';
 import { Nullable } from 'types';
 
 export enum WEATHER_ACTIONS_TYPE {
   SET_LOCATION = 'SET_LOCATION',
 }
+export type WeatherInitialState = typeof initialState;
+export type WeatherActionsType = ReturnType<typeof setLocation>;
 
 const initialState = {
   location: {
@@ -27,8 +29,6 @@ const initialState = {
   }[],
 };
 
-export type WeatherInitialState = typeof initialState;
-
 export const weatherReducer = (
   state: WeatherInitialState = initialState,
   action: WeatherActionsType,
@@ -43,8 +43,6 @@ export const weatherReducer = (
       return state;
   }
 };
-
-export type WeatherActionsType = ReturnType<typeof setLocation>;
 
 export const setLocation = (location: Location): WeatherACReturned<Location> => {
   return {

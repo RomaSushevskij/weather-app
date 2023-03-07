@@ -3,7 +3,7 @@ import {
   setLocation,
   WeatherInitialState,
   weatherReducer,
-} from 'store/reducers/weatherReducer';
+} from 'store/reducers/weatherReducer/weatherReducer';
 
 let startState: WeatherInitialState;
 
