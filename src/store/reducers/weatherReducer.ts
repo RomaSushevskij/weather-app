@@ -27,11 +27,11 @@ const initialState = {
   }[],
 };
 
-type WeatherInitialState = typeof initialState;
+export type WeatherInitialState = typeof initialState;
 
 export const weatherReducer = (
-  action: WeatherActionsType,
   state: WeatherInitialState = initialState,
+  action: WeatherActionsType,
 ): WeatherInitialState => {
   switch (action.type) {
     case WEATHER_ACTIONS_TYPE.SET_LOCATION: {
@@ -46,7 +46,7 @@ export const weatherReducer = (
 
 export type WeatherActionsType = ReturnType<typeof setLocation>;
 
-const setLocation = (location: Location): WeatherACReturned<Location> => {
+export const setLocation = (location: Location): WeatherACReturned<Location> => {
   return {
     type: WEATHER_ACTIONS_TYPE.SET_LOCATION,
     payload: location,
