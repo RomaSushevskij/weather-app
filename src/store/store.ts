@@ -1,7 +1,9 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
 
-import { weatherReducer } from 'store/reducers/weatherReducer';
+import { weatherReducer } from 'store/reducers/weather';
+import { weatherWatcherSaga } from 'store/sagas';
 
 declare global {
   interface Window {
@@ -19,3 +21,8 @@ export const store = createStore(
   rootReducer,
   composeEnhancers(applyMiddleware(sagaMiddleware)),
 );
+export function* rootWatcherSaga(): Generator {
+  yield all([weatherWatcherSaga()]);
+}
+
+sagaMiddleware.run(rootWatcherSaga);
