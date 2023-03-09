@@ -1,0 +1,25 @@
+@import "src/styles/variables";
+
+.chip {
+  width: max-content;
+  padding: 0 5px;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: -.2px;
+  background-color: $primary09;
+  color: $textColor;
+  border-radius: 8px;
+  font-weight: 400;
+
+  &.medium {
+    font-size: 12px;
+    border-radius: 12px;
+    padding: 1px 7px;
+  }
+
+  &.large {
+    font-size: 14px;
+    border-radius: 12px;
+    padding: 1px 8px;
+  }
+}
