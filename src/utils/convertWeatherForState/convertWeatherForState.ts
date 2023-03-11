@@ -1,5 +1,5 @@
 import { GetCurrentWeatherResponse } from 'api/weatherAPI';
-import { MS_IN_ONE_SECOND } from 'constantsCommon';
+import { MS_IN_ONE_SECOND } from 'constantsGlobal';
 import { CurrentWeather } from 'store/reducers/weather';
 import { getDateNowInSeconds } from 'utils';
 
