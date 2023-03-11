@@ -5,3 +5,4 @@ export { WeatherFrame } from './WeatherFrame';
 export { WeatherList } from './WeatherList';
 export { WeatherBlock } from './WetherBlock';
 export { WeatherIcon } from './WetherBlock/WeatherIcon';
+export { Input } from './Input/Input';
