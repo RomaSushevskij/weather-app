@@ -1,7 +1,7 @@
 import { GetCurrentWeatherResponse } from 'api/weatherAPI';
 import { MS_IN_ONE_SECOND } from 'constantsGlobal';
 import { CurrentWeather } from 'store/reducers/weather';
-import { getDateNowInSeconds } from 'utils';
+import { getDateNowInSeconds, roundTempValue } from 'utils';
 
 export const convertWeatherForState = (
   weatherFromAPI: GetCurrentWeatherResponse,
@@ -12,18 +12,15 @@ export const convertWeatherForState = (
     days: [{ hours }],
   } = weatherFromAPI;
 
-  weatherForState.temp =
-    Math.abs(temp) === temp ? Math.round(temp) : Math.abs(Math.round(temp));
+  weatherForState.temp = roundTempValue(temp);
   weatherForState.icon = icon;
-  const remainingHours = hours
+  weatherForState.hourlyWeather = hours
     .filter(({ datetimeEpoch }) => datetimeEpoch >= getDateNowInSeconds())
     .map(({ datetimeEpoch, icon, temp }) => ({
       temp: Math.round(temp),
       icon,
       datetimeEpoch: datetimeEpoch * MS_IN_ONE_SECOND,
     }));
-
-  weatherForState.hourlyWeather = remainingHours;
 
   return weatherForState;
 };
