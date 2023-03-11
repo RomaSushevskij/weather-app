@@ -8,18 +8,22 @@ type ChipProps = {
 };
 
 export const Chip = memo(({ label, size = 'small' }: ChipProps) => {
-  let iconStyle;
+  let chipStyle: string;
 
   switch (size) {
     case 'medium':
-      iconStyle = `${style.chip} ${style.medium}`;
+      chipStyle = `${style.chip} ${style.medium}`;
       break;
     case 'large':
-      iconStyle = `${style.chip} ${style.large}`;
+      chipStyle = `${style.chip} ${style.large}`;
       break;
     default:
-      iconStyle = style.chip;
+      chipStyle = style.chip;
   }
 
-  return <p className={iconStyle}>{label}</p>;
+  return (
+    <div className={chipStyle}>
+      <p className={style.label}>{label}</p>
+    </div>
+  );
 });
