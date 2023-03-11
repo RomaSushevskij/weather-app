@@ -1,6 +1,8 @@
 .app {
-  background-image: url("../assets/cloudly-background.jpg");
-  background-size: cover;
-  background-position: center;
-  min-height: 100%;
+  background: linear-gradient(135deg, hsla(220, 40%, 51%, 1) 0%, hsla(220, 93%, 72%, 1) 45%, hsla(220, 40%, 51%, 1) 100%);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
