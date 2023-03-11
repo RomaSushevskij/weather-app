@@ -1,6 +1,9 @@
 .icon {
   width: 24px;
-  margin: 0 auto;
+
+  img {
+    font-size: 6px;
+  }
 
   &.current {
     width: 44px;
