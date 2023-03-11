@@ -1,7 +1,7 @@
-import { GetCurrentWeatherResponse } from 'api/weatherAPI/types';
+import { GetCurrentWeatherResponse } from 'api/weatherAPI';
 import { MS_IN_ONE_SECOND } from 'constantsCommon';
-import { CurrentWeather } from 'store/reducers/weather/types';
-import { getDateNowInSeconds } from 'utils/getDateNowInSeconds/getDateNowInSeconds';
+import { CurrentWeather } from 'store/reducers/weather';
+import { getDateNowInSeconds } from 'utils';
 
 export const convertWeatherForState = (
   weatherFromAPI: GetCurrentWeatherResponse,

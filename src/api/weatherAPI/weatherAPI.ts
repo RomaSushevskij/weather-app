@@ -1,5 +1,5 @@
 import { visualCrossingWeather } from 'api/config';
-import { GetCurrentWeatherParams, GetCurrentWeatherResponse } from 'api/weatherAPI/types';
+import { GetCurrentWeatherParams, GetCurrentWeatherResponse } from 'api/weatherAPI';
 
 export const weatherAPI = {
   async getCurrentWeather({

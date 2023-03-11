@@ -1,4 +1,4 @@
-import { weatherIcons } from 'api/weatherAPI/enums';
+import { weatherIcons } from 'api/weatherAPI';
 
 export type GetCurrentWeatherParams = {
   latitude?: number;

@@ -1,7 +1,7 @@
-import { weatherIcons } from 'api/weatherAPI/enums';
+import { weatherIcons } from 'api/weatherAPI';
 import { GetCurrentWeatherResponse } from 'api/weatherAPI/types';
 import { CurrentWeather } from 'store/reducers/weather/types';
-import { convertWeatherForState } from 'utils/convertWeatherForState/convertWeatherForState';
+import { convertWeatherForState } from 'utils';
 
 test('The convertWeatherForState function should work correctly', () => {
   const weatherFromAPI: GetCurrentWeatherResponse = {

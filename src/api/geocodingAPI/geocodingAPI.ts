@@ -1,5 +1,5 @@
 import { openWeather } from 'api/config';
-import { GetCityNameParams, GetLocationResponse } from 'api/geocodingAPI/types';
+import { GetCityNameParams, GetLocationResponse } from 'api/geocodingAPI';
 
 export const geocodingAPI = {
   async getLocation({ latitude, longitude }: GetCityNameParams) {
