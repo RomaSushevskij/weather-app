@@ -1,19 +1,21 @@
 import { call, CallEffect, put, PutEffect, takeEvery } from 'redux-saga/effects';
 
 import { geocodingAPI, weatherAPI } from 'api';
-import { Location } from 'api/geocodingAPI/types';
+import { LocationFromAPI } from 'api/geocodingAPI';
 import { GetCurrentWeatherResponse } from 'api/weatherAPI/types';
+import { ActionType } from 'store';
 import { setLocation } from 'store/reducers/weather';
 import { CurrentWeather } from 'store/reducers/weather/types';
 import {
   setCurrentWeather,
   WeatherActionsType,
 } from 'store/reducers/weather/weatherReducer';
-import { ActionType } from 'store/types';
-import { getCurrentPosition } from 'utils';
-import { convertWeatherForState } from 'utils/convertWeatherForState/convertWeatherForState';
-import { GetLocationReturned } from 'utils/getCurrentPosition/getCurrentPosition';
-import { getDateNowInSeconds } from 'utils/getDateNowInSeconds/getDateNowInSeconds';
+import {
+  getCurrentPosition,
+  GetPositionReturned,
+  convertWeatherForState,
+  getDateNowInSeconds,
+} from 'utils';
 
 export enum weatherActions {
   GET_CURRENT_WEATHER = 'weather/GET_CURRENT_WEATHER',
@@ -21,15 +23,15 @@ export enum weatherActions {
 
 export function* getCurrentWeatherWorkerSaga(): Generator<
   | CallEffect<
-      GetLocationReturned | Location | GetCurrentWeatherResponse | CurrentWeather
+      GetPositionReturned | LocationFromAPI | GetCurrentWeatherResponse | CurrentWeather
     >
   | PutEffect<WeatherActionsType>,
   void,
   never
 > {
   try {
-    const { latitude, longitude }: GetLocationReturned = yield call(getCurrentPosition);
-    const location: Location = yield call(geocodingAPI.getLocation, {
+    const { latitude, longitude }: GetPositionReturned = yield call(getCurrentPosition);
+    const location: LocationFromAPI = yield call(geocodingAPI.getLocation, {
       latitude,
       longitude,
     });
