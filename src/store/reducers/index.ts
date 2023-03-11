@@ -1,0 +1,1 @@
+export { weatherReducer } from './weather';
