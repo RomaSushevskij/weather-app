@@ -1,0 +1,81 @@
+@import "src/styles/variables";
+@mixin iconStyle {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.inputWrapper {
+  width: 100%;
+  position: relative;
+
+  .input {
+    width: 100%;
+    outline: none;
+    padding: 7px 20px;
+    background: rgba(0, 0, 0, 0.26);
+    border-radius: 6px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    border: none;
+    color: #a0a7b6;
+    font-size: 14px;
+    font-weight: 500;
+
+    &:focus {
+      color: #E0E1E3;
+    }
+
+    &:disabled {
+      color: lightgray;
+    }
+
+    &::placeholder {
+      color: gray;
+    }
+
+    &.errorInput {
+      color: $errorColor;
+    }
+
+    &.paddingLeft {
+      padding-left: 30px;
+    }
+
+
+    &.paddingRight {
+      padding-right: 30px;
+    }
+  }
+
+  .errorInput {
+    &::placeholder {
+      color: lightgray;
+    }
+  }
+
+  .error {
+    font-size: 16px;
+    line-height: 140%;
+    color: $errorColor;
+    margin-top: 5px;
+    text-align: start;
+  }
+
+  .startIcon {
+    @include iconStyle();
+    left: 5px;
+  }
+
+  .endIcon {
+    @include iconStyle();
+    right: 5px;
+  }
+}
+
+
+
+
+
