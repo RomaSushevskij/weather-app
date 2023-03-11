@@ -3,7 +3,7 @@ export type GetCityNameParams = {
   longitude: number;
 };
 
-export type Location = {
+export type LocationFromAPI = {
   country: string;
   lat: number;
   lon: number;
@@ -11,4 +11,4 @@ export type Location = {
   state: string;
 };
 
-export type GetLocationResponse = Location[];
+export type GetLocationResponse = LocationFromAPI[];
