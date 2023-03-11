@@ -1,0 +1,23 @@
+@import "src/styles/variables";
+
+.weatherListWrp {
+  display: flex;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary09;
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: inherit;
+  }
+
+  .weatherBlock {
+    padding: 15px 10px;
+  }
+}
