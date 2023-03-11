@@ -1,1 +1,2 @@
-export { weatherReducer, setLocation } from './weatherReducer';
+export { weatherReducer, setLocation, setCurrentWeather } from './weatherReducer';
+export type { CurrentWeather, LocationFromState } from './types';
