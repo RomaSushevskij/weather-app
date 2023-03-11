@@ -1,0 +1,16 @@
+@import "src/styles/variables";
+
+.date {
+  .time {
+    font-size: 50px;
+    color: $textColor;
+    font-weight: 200;
+    letter-spacing: 3px;
+    text-shadow: $textShadow;
+  }
+
+  .day {
+    color: $textColor;
+    text-shadow:$textShadow;
+  }
+}
