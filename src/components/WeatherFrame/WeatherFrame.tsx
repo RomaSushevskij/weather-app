@@ -5,17 +5,21 @@ import style from './WeatherFrame.module.scss';
 import { weatherIcons } from 'api/weatherAPI';
 import bgcImage from 'assets/cloudly-background.jpg';
 import { DateDisplay } from 'components/DateDisplay';
+import { SearchIcon } from 'components/icons';
+import { Input } from 'components/Input';
 import { Location } from 'components/Location';
 import { WeatherList } from 'components/WeatherList';
 import { WeatherBlock } from 'components/WetherBlock';
 import { TODAY } from 'constantsGlobal';
 import { useAppSelector } from 'hooks';
+import { useInput } from 'hooks/useInput/useInput';
 import { weatherData } from 'mockData/mockData';
 import { selectCurrentWeather, selectWeatherLocation } from 'store/selectors';
 
 export const WeatherFrame = memo(() => {
   const { icon, temp, hourlyWeather } = useAppSelector(selectCurrentWeather);
   const { cityName, country } = useAppSelector(selectWeatherLocation);
+  const { inputValue, onInputValueChange } = useInput(cityName ?? '');
 
   const styles: CSSProperties = {
     backgroundImage: `url(${bgcImage})`,
@@ -23,6 +27,13 @@ export const WeatherFrame = memo(() => {
 
   return (
     <div className={style.weatherFrameWrp} style={styles}>
+      <div className={style.citySelection}>
+        <Input
+          value={inputValue}
+          onChange={onInputValueChange}
+          startIcon={<SearchIcon width={20} height={20} color="#a0a7b6" />}
+        />
+      </div>
       <div className={style.dateAndLocation}>
         <DateDisplay />
         <Location cityName={cityName || 'City name'} country={country || 'Country'} />
