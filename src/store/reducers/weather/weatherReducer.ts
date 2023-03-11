@@ -1,8 +1,7 @@
-import { WeatherCondition } from 'api';
-import { Location } from 'api/geocodingAPI/types';
-import { CurrentWeather } from 'store/reducers/weather/types';
-import { ActionType } from 'store/types';
-import { Nullable } from 'types';
+import { LocationFromAPI } from 'api/geocodingAPI';
+import { WeatherCondition } from 'api/weatherAPI';
+import { ActionType } from 'store';
+import { CurrentWeather, LocationFromState } from 'store/reducers/weather/types';
 
 export enum WEATHER_ACTIONS_TYPE {
   SET_LOCATION = 'weather/SET_LOCATION',
@@ -15,11 +14,11 @@ export type WeatherActionsType =
 
 const initialState = {
   location: {
-    cityName: null as Nullable<string>,
-    latitude: null as Nullable<number>,
-    longitude: null as Nullable<number>,
-    country: null as Nullable<string>,
-  },
+    cityName: null,
+    latitude: null,
+    longitude: null,
+    country: null,
+  } as LocationFromState,
   currentWeather: {
     icon: null,
     temp: null,
@@ -39,7 +38,7 @@ export const weatherReducer = (
         lon: longitude,
         country,
         name: cityName,
-      } = action.payload ?? ({} as Location);
+      } = action.payload ?? ({} as LocationFromAPI);
 
       return { ...state, location: { cityName, longitude, country, latitude } };
     }
@@ -54,8 +53,8 @@ export const weatherReducer = (
 };
 
 export const setLocation = (
-  location: Location,
-): ActionType<WEATHER_ACTIONS_TYPE.SET_LOCATION, Location> => {
+  location: LocationFromAPI,
+): ActionType<WEATHER_ACTIONS_TYPE.SET_LOCATION, LocationFromAPI> => {
   return {
     type: WEATHER_ACTIONS_TYPE.SET_LOCATION,
     payload: location,
