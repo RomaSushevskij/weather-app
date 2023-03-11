@@ -8,7 +8,7 @@ import { DateDisplay } from 'components/DateDisplay';
 import { Location } from 'components/Location';
 import { WeatherList } from 'components/WeatherList';
 import { WeatherBlock } from 'components/WetherBlock';
-import { TODAY } from 'constantsCommon';
+import { TODAY } from 'constantsGlobal';
 import { useAppSelector } from 'hooks';
 import { weatherData } from 'mockData/mockData';
 import { selectCurrentWeather, selectWeatherLocation } from 'store/selectors';

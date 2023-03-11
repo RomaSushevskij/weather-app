@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { MS_IN_ONE_SECOND } from 'constantsCommon';
+import { MS_IN_ONE_SECOND } from 'constantsGlobal';
 
 type CurrentDate = {
   time: string;
