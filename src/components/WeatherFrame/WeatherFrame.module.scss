@@ -1,0 +1,45 @@
+@import 'src/styles/variables';
+
+.weatherFrameWrp {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+  max-width: 80vw;
+  height: 90vh;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  @media screen and (max-width: 500px) {
+    min-width: 100vw;
+    min-height: 100vh;
+  }
+
+  .dateAndLocation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 50px 50px 30px 50px;
+
+    @media screen and (max-width: 400px) {
+      margin: 50px 20px 30px 20px;
+    }
+  }
+
+  .weather {
+    margin-top: auto;
+    background: linear-gradient(180deg, transparent 0%, $primary08 8%);
+    padding-top: 10px;
+    display: flex;
+
+    @media screen and (max-width: 500px) {
+      flex-direction: column;
+      padding-top: 30px;
+    }
+
+    & > div:first-child {
+      margin: 0 20px;
+    }
+  }
+
+}
