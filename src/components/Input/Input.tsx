@@ -1,9 +1,29 @@
-import React, { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent } from 'react';
+import React, {
+  ChangeEvent,
+  DetailedHTMLProps,
+  ForwardedRef,
+  forwardRef,
+  InputHTMLAttributes,
+  KeyboardEvent,
+} from 'react';
 
 import style from './Input.module.scss';
-import { InputTextProps } from './types';
 
 import { ReturnComponent } from 'types';
+
+type DefaultInputProps = DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>;
+type InputTextProps = DefaultInputProps & {
+  onChangeText?: (value: string) => void;
+  onEnter?: () => void;
+  error?: string;
+  spanClassName?: string;
+  customStyle?: string;
+  startIcon?: ReturnComponent;
+  endIcon?: ReturnComponent;
+};
 
 export const Input = forwardRef(
   (
@@ -34,16 +54,16 @@ export const Input = forwardRef(
       error ? `${style.errorInput} ${style.input}` : style.input
     } ${className}`;
 
-    let finalInputStyle: string;
+    let InputWithIconsStyle: string;
 
     if (startIcon && !endIcon) {
-      finalInputStyle = `${inputStyle} ${style.paddingLeft}`;
+      InputWithIconsStyle = `${inputStyle} ${style.paddingLeft}`;
     } else if (endIcon && !startIcon) {
-      finalInputStyle = `${inputStyle} ${style.paddingRight}`;
+      InputWithIconsStyle = `${inputStyle} ${style.paddingRight}`;
     } else if (startIcon && endIcon) {
-      finalInputStyle = `${inputStyle} ${style.paddingLeft} ${style.paddingRight}`;
+      InputWithIconsStyle = `${inputStyle} ${style.paddingLeft} ${style.paddingRight}`;
     } else {
-      finalInputStyle = inputStyle;
+      InputWithIconsStyle = inputStyle;
     }
 
     const errorSpanStyle = `${style.error} ${spanClassName || ''}`;
@@ -66,7 +86,7 @@ export const Input = forwardRef(
           type={type}
           onChange={onChangeCallback}
           onKeyPress={onKeyPressCallback}
-          className={finalInputStyle}
+          className={InputWithIconsStyle}
           disabled={disabled}
           ref={innerRef}
           {...restProps}

@@ -1,4 +1,5 @@
 @import "src/styles/variables";
+
 @mixin iconStyle {
   position: absolute;
   z-index: 1;
@@ -14,18 +15,18 @@
     width: 100%;
     outline: none;
     padding: 7px 20px;
-    background: rgba(0, 0, 0, 0.26);
+    background: $inputBGC;
     border-radius: 6px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
+    box-shadow: $inputShadow;
+    backdrop-filter: $inputFilter;
+    -webkit-backdrop-filter: $inputFilter;
     border: none;
-    color: #a0a7b6;
+    color: $inputColor;
     font-size: 14px;
     font-weight: 500;
 
     &:focus {
-      color: #E0E1E3;
+      color: $inputFocusColor;
     }
 
     &:disabled {
