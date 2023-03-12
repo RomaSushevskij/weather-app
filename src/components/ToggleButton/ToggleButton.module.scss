@@ -1,0 +1,48 @@
+@import "src/styles/variables";
+
+.toggleButtonWrp {
+  box-shadow: $inputShadow;
+  display: inline-block;
+
+  .button {
+    display: inline-flex;
+    cursor: pointer;
+    padding: 7px;
+    background: $inputBGC;
+    backdrop-filter: $inputFilter;
+    -webkit-backdrop-filter: $inputFilter;
+    transition: background .3s ease;
+
+    &.checked {
+      span {
+        color: $inputFocusColor
+      }
+    }
+
+    &:hover, &:focus-within, &.checked {
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    &.firstButton {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+
+    &.lastButton {
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+
+    input {
+      appearance: none;
+    }
+
+    span {
+      color: $inputColor;
+      font-size: 14px;
+      padding: 0 8px;
+      font-weight: 500;
+    }
+  }
+}
+
