@@ -45,8 +45,12 @@
     }
   }
 
+  .forecastSelection {
+    z-index: 1;
+    margin: auto 10px 10px auto;
+  }
+
   .weather {
-    margin-top: auto;
     background: linear-gradient(180deg, transparent 0%, $primary08 8%);
     padding-top: 10px;
     display: flex;
