@@ -1,4 +1,3 @@
-import { LocationFromAPI } from 'api/geocodingAPI';
 import { WeatherCondition } from 'api/weatherAPI';
 import { ActionType } from 'store';
 import { CurrentWeather, LocationFromState } from 'store/reducers/weather/types';
@@ -33,14 +32,9 @@ export const weatherReducer = (
 ): WeatherInitialState => {
   switch (action.type) {
     case WEATHER_ACTIONS_TYPE.SET_LOCATION: {
-      const {
-        lat: latitude,
-        lon: longitude,
-        country,
-        name: cityName,
-      } = action.payload ?? ({} as LocationFromAPI);
+      const location = action.payload as LocationFromState;
 
-      return { ...state, location: { cityName, longitude, country, latitude } };
+      return { ...state, location: { ...location } };
     }
     case WEATHER_ACTIONS_TYPE.SET_CURRENT_WEATHER: {
       const currentWeather = action.payload ?? ({} as CurrentWeather);
@@ -53,8 +47,8 @@ export const weatherReducer = (
 };
 
 export const setLocation = (
-  location: LocationFromAPI,
-): ActionType<WEATHER_ACTIONS_TYPE.SET_LOCATION, LocationFromAPI> => {
+  location: LocationFromState,
+): ActionType<WEATHER_ACTIONS_TYPE.SET_LOCATION, LocationFromState> => {
   return {
     type: WEATHER_ACTIONS_TYPE.SET_LOCATION,
     payload: location,

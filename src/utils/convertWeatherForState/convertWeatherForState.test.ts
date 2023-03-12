@@ -8,6 +8,7 @@ test('The convertWeatherForState function should work correctly', () => {
     currentConditions: {
       icon: weatherIcons.SNOW,
       temp: 0,
+      address: 'Minsk',
     },
     days: [
       {
@@ -34,6 +35,10 @@ test('The convertWeatherForState function should work correctly', () => {
         ],
       },
     ],
+    longitude: 23.7139,
+    latitude: 52.0587,
+    address: 'Brest',
+    resolvedAddress: 'Брест, Брестский район, Брестская область, Беларусь',
   };
 
   const weatherForState: CurrentWeather = convertWeatherForState(weatherFromAPI);

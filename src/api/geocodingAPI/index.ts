@@ -1,1 +1,1 @@
-export type { LocationFromAPI, GetLocationResponse, GetCityNameParams } from './types';
+export type { LocationFromGeoAPI, GetLocationResponse, GetCityNameParams } from './types';

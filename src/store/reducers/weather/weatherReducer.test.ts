@@ -1,6 +1,5 @@
-import { LocationFromAPI } from 'api/geocodingAPI';
 import { weatherIcons } from 'api/weatherAPI';
-import { CurrentWeather } from 'store/reducers/weather/types';
+import { CurrentWeather, LocationFromState } from 'store/reducers/weather/types';
 import {
   setCurrentWeather,
   setLocation,
@@ -28,12 +27,11 @@ beforeEach(() => {
 });
 
 test('The current location should be added to the state', () => {
-  const location: LocationFromAPI = {
-    lat: 52.4231,
-    lon: 31.0136,
-    name: 'Homiel',
+  const location: LocationFromState = {
+    latitude: 52.4231,
+    longitude: 31.0136,
+    cityName: 'Homiel',
     country: 'BY',
-    state: 'Gomel',
   };
 
   const action = setLocation(location);
@@ -41,9 +39,9 @@ test('The current location should be added to the state', () => {
   const endState = weatherReducer(startState, action);
 
   expect(endState.location.country).toBe(location.country);
-  expect(endState.location.cityName).toBe(location.name);
-  expect(endState.location.longitude).toBe(location.lon);
-  expect(endState.location.latitude).toBe(location.lat);
+  expect(endState.location.cityName).toBe(location.cityName);
+  expect(endState.location.longitude).toBe(location.longitude);
+  expect(endState.location.latitude).toBe(location.latitude);
 });
 
 test('The current weather should be added to the state', () => {

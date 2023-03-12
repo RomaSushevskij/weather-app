@@ -15,8 +15,12 @@ export type WeatherCondition = {
 };
 
 export type GetCurrentWeatherResponse = {
-  currentConditions: Omit<WeatherCondition, 'datetimeEpoch'>;
+  currentConditions: Omit<WeatherCondition, 'datetimeEpoch'> & { address: string };
   days: {
     hours: WeatherCondition[];
   }[];
+  latitude: number;
+  longitude: number;
+  address: string;
+  resolvedAddress: string;
 };

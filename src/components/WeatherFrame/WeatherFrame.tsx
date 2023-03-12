@@ -1,4 +1,4 @@
-import { CSSProperties, memo, useState } from 'react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 
 import style from './WeatherFrame.module.scss';
 
@@ -13,19 +13,24 @@ import {
   WeatherList,
 } from 'components';
 import { SearchIcon } from 'components/icons';
-import { TODAY } from 'constantsGlobal';
-import { useAppSelector } from 'hooks';
+import { EMPTY_STRING, TODAY } from 'constantsGlobal';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { useInput } from 'hooks/useInput/useInput';
 import { weatherData } from 'mockData/mockData';
+import { getCurrentWeatherByCityName } from 'store/sagas/weather/weatherSagas';
 import { selectCurrentWeather, selectWeatherLocation } from 'store/selectors';
 import { ForecastType } from 'types';
 
 const forecasts: ForecastType[] = ['Hourly', 'Daily'];
 
 export const WeatherFrame = memo(() => {
+  const dispatch = useAppDispatch();
   const { icon, temp, hourlyWeather } = useAppSelector(selectCurrentWeather);
   const { cityName, country } = useAppSelector(selectWeatherLocation);
-  const { inputValue, onInputValueChange } = useInput(cityName ?? '');
+
+  const { inputValue, onInputValueChange, handleSetInputValue } = useInput(
+    cityName ?? 'City name',
+  );
 
   const [forecastType, setForecastType] = useState<ForecastType>(() => forecasts[0]);
 
@@ -33,12 +38,21 @@ export const WeatherFrame = memo(() => {
     backgroundImage: `url(${bgcImage})`,
   };
 
+  const fetchWeatherByCityName = (): void => {
+    dispatch(getCurrentWeatherByCityName(inputValue));
+  };
+
+  useEffect(() => {
+    handleSetInputValue(cityName ?? EMPTY_STRING);
+  }, [cityName]);
+
   return (
     <div className={style.weatherFrameWrp} style={styles}>
       <div className={style.citySelection}>
         <Input
           value={inputValue}
           onChange={onInputValueChange}
+          onEnter={fetchWeatherByCityName}
           startIcon={<SearchIcon width={20} height={20} color="#bac1d2" />}
         />
       </div>
@@ -62,7 +76,7 @@ export const WeatherFrame = memo(() => {
         />
         <WeatherList
           weatherForecastData={hourlyWeather.length ? hourlyWeather : weatherData}
-          weatherForecastType="daily"
+          weatherForecastType="hourly"
         />
       </div>
     </div>

@@ -1,5 +1,4 @@
-import { WeatherCondition } from 'api/weatherAPI';
-import { weatherIcons } from 'api/weatherAPI';
+import { WeatherCondition, weatherIcons } from 'api/weatherAPI';
 import { Nullable } from 'types';
 
 export type CurrentWeather = {
