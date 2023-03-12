@@ -1,5 +1,7 @@
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 
+import { EMPTY_STRING } from 'constantsGlobal';
+
 type UseInputReturned = {
   inputValue: string;
   inputError: string;
@@ -9,8 +11,8 @@ type UseInputReturned = {
 };
 
 export const useInput = (initialInputValue: string): UseInputReturned => {
-  const [inputValue, setInputValue] = useState(initialInputValue);
-  const [inputError, setInputError] = useState(initialInputValue);
+  const [inputValue, setInputValue] = useState(() => initialInputValue);
+  const [inputError, setInputError] = useState(EMPTY_STRING);
 
   const handleSetInputValue = useCallback((newInputValue: string) => {
     setInputValue(newInputValue);
