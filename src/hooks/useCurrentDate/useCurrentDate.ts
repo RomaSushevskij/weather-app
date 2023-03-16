@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { MS_IN_ONE_SECOND } from 'constantsGlobal';
+import { MS_IN_SECOND } from 'constantsGlobal';
 
 type CurrentDate = {
   time: string;
@@ -21,7 +21,7 @@ export const useCurrentDate = (): CurrentDate => {
   };
 
   useEffect(() => {
-    const timerId = setInterval(refreshClock, MS_IN_ONE_SECOND);
+    const timerId = setInterval(refreshClock, MS_IN_SECOND);
 
     return () => {
       clearInterval(timerId);
