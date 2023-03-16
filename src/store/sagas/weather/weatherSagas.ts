@@ -39,7 +39,7 @@ type FetchWeatherReturned = Generator<
 >;
 
 export function* fetchWeather(
-  action: ReturnType<typeof weatherSagasAC.getOpenWeather>,
+  action: ReturnType<typeof weatherSagasAC.getWeather>,
 ): FetchWeatherReturned {
   try {
     yield put(appAC.setStatus({ status: 'loading' }));
@@ -95,7 +95,7 @@ export function* fetchWeather(
 }
 
 export const weatherSagasAC = {
-  getOpenWeather(params?: FetchWeatherParams): {
+  getWeather(params?: FetchWeatherParams): {
     type: weatherActions.GET_OPEN_WEATHER;
     payload?: FetchWeatherParams;
   } {

@@ -22,7 +22,7 @@ const App = (): ReturnComponent => {
   //     });
   // }, []);
   useEffect(() => {
-    dispatch(weatherSagasAC.getOpenWeather());
+    dispatch(weatherSagasAC.getWeather());
   }, [dispatch]);
 
   return (
