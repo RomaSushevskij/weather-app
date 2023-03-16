@@ -2,12 +2,12 @@ import { memo } from 'react';
 
 import style from './WeatherList.module.scss';
 
-import { WeatherCondition } from 'api/weatherAPI';
 import { WeatherBlock } from 'components';
+import { WeatherData } from 'store/reducers/weatherReducer';
 import { convertUnixToTime, convertUnixToWeekDay } from 'utils';
 
 type WeatherListProps = {
-  weatherForecastData: WeatherCondition[];
+  weatherForecastData: WeatherData[];
   weatherForecastType: 'hourly' | 'daily';
 };
 export const WeatherList = memo(
