@@ -1,4 +1,4 @@
-export enum weatherIcons {
+export enum WeatherIcons {
   SNOW = 'snow',
   SNOW_SHOWERS_DAY = 'snow-showers-day',
   SNOW_SHOWERS_NIGHT = 'snow-showers-night',
@@ -15,4 +15,13 @@ export enum weatherIcons {
   PARTLY_CLOUDY_NIGHT = 'partly-cloudy-night',
   CLEAR_DAY = 'clear-day',
   CLEAR_NIGHT = 'clear-night',
+}
+export enum WeatherAPI {
+  OPEN_WEATHER = 'OpenWeather',
+  VISUAL_CROSSING_WEATHER = 'VisualCrossingWeather',
+}
+
+export enum WeatherForecast {
+  HOURLY = 'Hourly',
+  DAILY = 'Daily',
 }

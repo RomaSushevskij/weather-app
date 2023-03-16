@@ -1,6 +1,6 @@
-import { weatherIcons } from 'api/weatherAPI';
+import { WeatherIcons } from 'store/reducers/weatherReducer';
 
-export const getWeatherIconLink = (icon: weatherIcons): string => {
+export const getWeatherIconLink = (icon: WeatherIcons): string => {
   // return `https://raw.githubusercontent.com/RomaSushevskij/weatherIcons/master/${icon}.svg`;
   // eslint-disable-next-line global-require
   return require(`assets/weatherIcons/${icon}.svg`);

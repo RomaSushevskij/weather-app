@@ -2,7 +2,9 @@ import { rootReducer, store } from 'store/store';
 
 export type AppStateType = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
-export type ActionType<T, P> = {
+export type Action<T> = {
   type: T;
-  payload?: P;
 };
+export interface PayloadAction<T, P> extends Action<T> {
+  payload: P;
+}
