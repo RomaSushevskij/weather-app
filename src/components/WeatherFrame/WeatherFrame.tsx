@@ -69,6 +69,10 @@ export const WeatherFrame = memo(() => {
     dispatch(weatherAC.setForecastType({ weatherForecast: forecastType }));
   };
 
+  const onWeatherAPIChange = (weatherAPI: WeatherAPI): void => {
+    dispatch(weatherAC.setWeatherAPI({ weatherAPI }));
+  };
+
   useEffect(() => {
     dispatch(weatherSagasAC.getWeather({ weatherAPI, localityName: inputValue }));
   }, [weatherAPI, dispatch]);
@@ -96,7 +100,7 @@ export const WeatherFrame = memo(() => {
           <ToggleButton
             value={weatherAPI}
             options={weatherAPIs}
-            onChangeOption={onForecastTypeChange}
+            onChangeOption={onWeatherAPIChange}
           />
         </div>
         <div>
