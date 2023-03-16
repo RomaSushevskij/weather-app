@@ -25,7 +25,7 @@ beforeEach(() => {
     },
     hourlyWeather: [] as HourlyWeather,
     dailyWeather: [] as DailyWeather,
-    selectedWeatherAPI: WeatherAPI.OPEN_WEATHER,
+    weatherAPI: WeatherAPI.OPEN_WEATHER,
     weatherForecast: WeatherForecast.HOURLY,
   };
 });
@@ -102,4 +102,15 @@ test('The correct weatherForecast value should be set to the state', () => {
 
   expect(startState.weatherForecast).toBe(WeatherForecast.HOURLY);
   expect(endState.weatherForecast).toBe(WeatherForecast.DAILY);
+});
+
+test('The correct weatherAPI value should be set to the state', () => {
+  const action = weatherAC.setWeatherAPI({
+    weatherAPI: WeatherAPI.VISUAL_CROSSING_WEATHER,
+  });
+
+  const endState = weatherReducer(startState, action);
+
+  expect(startState.weatherAPI).toBe(WeatherAPI.OPEN_WEATHER);
+  expect(endState.weatherAPI).toBe(WeatherAPI.VISUAL_CROSSING_WEATHER);
 });

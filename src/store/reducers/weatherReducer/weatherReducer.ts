@@ -12,16 +12,19 @@ enum WEATHER_ACTIONS_TYPE {
   SET_DAILY_WEATHER = 'weather/SET_DAILY_WEATHER',
   SET_GENERAL_WEATHER = 'weather/SET_GENERAL_WEATHER',
   SET_FORECAST_TYPE = 'weather/SET_FORECAST_TYPE',
+  SET_WEATHER_API = 'weather/SET_WEATHER_API',
 }
 
 export type WeatherInitialState = typeof initialState;
 export type WeatherConditionState = Omit<
   WeatherInitialState,
-  'selectedWeatherAPI' | 'weatherForecast'
+  'weatherAPI' | 'weatherForecast'
 >;
 
 type WeatherACParam<T = void, F = void> = F extends WeatherForecast
   ? { weatherForecast: WeatherForecast }
+  : T extends WeatherAPI
+  ? { weatherAPI: WeatherAPI }
   : T extends WeatherForecast.HOURLY
   ? { hourlyWeather: HourlyWeather }
   : T extends WeatherForecast.DAILY
@@ -35,7 +38,8 @@ export type WeatherActionsType =
   | ReturnType<typeof weatherAC.setHourlyWeather>
   | ReturnType<typeof weatherAC.setDailyWeather>
   | ReturnType<typeof weatherAC.setGeneralWeather>
-  | ReturnType<typeof weatherAC.setForecastType>;
+  | ReturnType<typeof weatherAC.setForecastType>
+  | ReturnType<typeof weatherAC.setWeatherAPI>;
 
 const initialState = {
   currentWeather: {
@@ -45,7 +49,7 @@ const initialState = {
   hourlyWeather: [] as HourlyWeather,
   dailyWeather: [] as DailyWeather,
   weatherForecast: WeatherForecast.HOURLY,
-  selectedWeatherAPI: WeatherAPI.OPEN_WEATHER,
+  weatherAPI: WeatherAPI.OPEN_WEATHER,
 };
 
 export const weatherReducer = (
@@ -57,7 +61,8 @@ export const weatherReducer = (
     case WEATHER_ACTIONS_TYPE.SET_CURRENT_WEATHER:
     case WEATHER_ACTIONS_TYPE.SET_HOURLY_WEATHER:
     case WEATHER_ACTIONS_TYPE.SET_DAILY_WEATHER:
-    case WEATHER_ACTIONS_TYPE.SET_FORECAST_TYPE: {
+    case WEATHER_ACTIONS_TYPE.SET_FORECAST_TYPE:
+    case WEATHER_ACTIONS_TYPE.SET_WEATHER_API: {
       return { ...state, ...action.payload };
     }
     default:
@@ -113,6 +118,14 @@ export const weatherAC = {
     return {
       type: WEATHER_ACTIONS_TYPE.SET_FORECAST_TYPE,
       payload: forecastType,
+    };
+  },
+  setWeatherAPI(
+    weatherAPI: WeatherACParam<WeatherAPI>,
+  ): PayloadAction<WEATHER_ACTIONS_TYPE.SET_WEATHER_API, WeatherACParam<WeatherAPI>> {
+    return {
+      type: WEATHER_ACTIONS_TYPE.SET_WEATHER_API,
+      payload: weatherAPI,
     };
   },
 };

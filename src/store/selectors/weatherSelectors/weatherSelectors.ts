@@ -20,6 +20,6 @@ export const weatherSelectors = {
     return state.weather.weatherForecast;
   },
   weatherAPI(state: AppStateType): WeatherAPI {
-    return state.weather.selectedWeatherAPI;
+    return state.weather.weatherAPI;
   },
 };

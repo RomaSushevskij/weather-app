@@ -71,7 +71,7 @@ export const WeatherFrame = memo(() => {
 
   useEffect(() => {
     dispatch(weatherSagasAC.getWeather({ weatherAPI, localityName: inputValue }));
-  }, [weatherAPI, inputValue, dispatch]);
+  }, [weatherAPI, dispatch]);
 
   useEffect(() => {
     handleSetInputValue(city || country || EMPTY_STRING);
