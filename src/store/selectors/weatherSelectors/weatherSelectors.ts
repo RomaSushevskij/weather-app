@@ -3,6 +3,7 @@ import {
   CurrentWeather,
   WeatherForecast,
   WeatherData,
+  WeatherAPI,
 } from 'store/reducers/weatherReducer';
 
 export const weatherSelectors = {
@@ -17,5 +18,8 @@ export const weatherSelectors = {
   },
   forecastType(state: AppStateType): WeatherForecast {
     return state.weather.weatherForecast;
+  },
+  weatherAPI(state: AppStateType): WeatherAPI {
+    return state.weather.selectedWeatherAPI;
   },
 };
