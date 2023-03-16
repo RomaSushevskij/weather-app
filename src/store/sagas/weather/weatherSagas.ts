@@ -19,15 +19,15 @@ import {
 } from 'store/reducers/weatherReducer/weatherReducer';
 import { fetchGeolocation } from 'store/sagas/geolocationSagas/geolocationSagas';
 import { geolocationSelectors } from 'store/selectors';
-import { normalizeState } from 'utils/normalizeState/normalizeState';
+import { checkIfGeolocationIsRequired, normalizeState } from 'utils';
 
 export enum weatherActions {
   GET_OPEN_WEATHER = 'weather/GET_OPEN_WEATHER',
 }
 
 export type FetchWeatherParams = {
-  localityName?: string;
-  weatherAPI?: WeatherAPI;
+  localityName: string;
+  weatherAPI: WeatherAPI;
 };
 
 type FetchWeatherReturned = Generator<
@@ -43,10 +43,21 @@ export function* fetchWeather(
 ): FetchWeatherReturned {
   try {
     yield put(appAC.setStatus({ status: 'loading' }));
-    if (action.payload) {
-      yield call(fetchGeolocation, { localityName: action.payload.localityName });
-    } else {
-      yield call(fetchGeolocation);
+    const city = yield select(geolocationSelectors.city);
+    const country = yield select(geolocationSelectors.country);
+
+    const isGeolocationChanged = checkIfGeolocationIsRequired({
+      searchLocality: action.payload?.localityName,
+      stateCity: city,
+      stateCountry: country,
+    });
+
+    if (isGeolocationChanged) {
+      if (action.payload.localityName) {
+        yield call(fetchGeolocation, { localityName: action.payload.localityName });
+      } else {
+        yield call(fetchGeolocation);
+      }
     }
 
     const latitude = yield select(geolocationSelectors.latitude);
@@ -95,9 +106,9 @@ export function* fetchWeather(
 }
 
 export const weatherSagasAC = {
-  getWeather(params?: FetchWeatherParams): {
+  getWeather(params: FetchWeatherParams): {
     type: weatherActions.GET_OPEN_WEATHER;
-    payload?: FetchWeatherParams;
+    payload: FetchWeatherParams;
   } {
     return {
       type: weatherActions.GET_OPEN_WEATHER,
