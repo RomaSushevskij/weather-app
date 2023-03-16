@@ -45,9 +45,12 @@
     }
   }
 
-  .forecastSelection {
-    z-index: 1;
-    margin: auto 10px 10px auto;
+  .selection {
+    margin: auto 10px 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .weather {

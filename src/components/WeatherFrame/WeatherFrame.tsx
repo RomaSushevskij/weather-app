@@ -17,11 +17,20 @@ import { EMPTY_STRING, NOW, TODAY } from 'constantsGlobal';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useInput } from 'hooks/useInput/useInput';
 import { weatherData } from 'mockData/mockData';
-import { weatherAC, WeatherForecast, WeatherIcons } from 'store/reducers/weatherReducer';
+import {
+  weatherAC,
+  WeatherAPI,
+  WeatherForecast,
+  WeatherIcons,
+} from 'store/reducers/weatherReducer';
 import { weatherSagasAC } from 'store/sagas/weather/weatherSagas';
 import { appSelectors, geolocationSelectors, weatherSelectors } from 'store/selectors';
 
 const forecasts: WeatherForecast[] = [WeatherForecast.HOURLY, WeatherForecast.DAILY];
+const weatherAPIs: WeatherAPI[] = [
+  WeatherAPI.OPEN_WEATHER,
+  WeatherAPI.VISUAL_CROSSING_WEATHER,
+];
 
 export const WeatherFrame = memo(() => {
   const dispatch = useAppDispatch();
@@ -29,6 +38,7 @@ export const WeatherFrame = memo(() => {
   const hourlyWeather = useAppSelector(weatherSelectors.hourlyForecast);
   const dailyWeather = useAppSelector(weatherSelectors.dailyForecast);
   const forecastType = useAppSelector(weatherSelectors.forecastType);
+  const weatherAPI = useAppSelector(weatherSelectors.weatherAPI);
   const city = useAppSelector(geolocationSelectors.city);
   const country = useAppSelector(geolocationSelectors.country);
   const appStatus = useAppSelector(appSelectors.status);
@@ -47,7 +57,8 @@ export const WeatherFrame = memo(() => {
   const fetchWeatherByCityName = (): void => {
     if (inputValue) {
       dispatch(
-        weatherSagasAC.getOpenWeather({
+        weatherSagasAC.getWeather({
+          weatherAPI,
           localityName: inputValue,
         }),
       );
@@ -57,6 +68,10 @@ export const WeatherFrame = memo(() => {
   const onForecastTypeChange = (forecastType: WeatherForecast): void => {
     dispatch(weatherAC.setForecastType({ weatherForecast: forecastType }));
   };
+
+  useEffect(() => {
+    dispatch(weatherSagasAC.getWeather({ weatherAPI, localityName: inputValue }));
+  }, [weatherAPI, inputValue, dispatch]);
 
   useEffect(() => {
     handleSetInputValue(city || country || EMPTY_STRING);
@@ -76,12 +91,21 @@ export const WeatherFrame = memo(() => {
         <DateDisplay />
         <Location city={city} country={country} />
       </div>
-      <div className={style.forecastSelection}>
-        <ToggleButton
-          value={forecastType}
-          options={forecasts}
-          onChangeOption={onForecastTypeChange}
-        />
+      <div className={style.selection}>
+        <div>
+          <ToggleButton
+            value={weatherAPI}
+            options={weatherAPIs}
+            onChangeOption={onForecastTypeChange}
+          />
+        </div>
+        <div>
+          <ToggleButton
+            value={forecastType}
+            options={forecasts}
+            onChangeOption={onForecastTypeChange}
+          />
+        </div>
       </div>
       <div className={style.weather}>
         <WeatherBlock
