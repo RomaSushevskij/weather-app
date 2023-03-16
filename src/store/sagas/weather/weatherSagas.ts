@@ -1,118 +1,111 @@
-import { call, CallEffect, put, PutEffect, takeEvery } from 'redux-saga/effects';
+import {
+  call,
+  CallEffect,
+  put,
+  PutEffect,
+  select,
+  SelectEffect,
+  takeLatest,
+} from 'redux-saga/effects';
 
-import { geocodingAPI, weatherAPI } from 'api';
-import { LocationFromGeoAPI } from 'api/geocodingAPI';
-import { GetCurrentWeatherResponse } from 'api/weatherAPI/types';
-import { ActionType } from 'store';
-import { setLocation } from 'store/reducers/weather';
-import { CurrentWeather } from 'store/reducers/weather/types';
+import { visualCrossingWeatherAPI } from 'api';
+import { GetOpenWeatherResponseData, openWeatherAPI } from 'api/openWeatherAPI';
+import { GetVisualCrossingWeatherResponseData } from 'api/visualCrossingWeatherAPI';
+import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
+import { WeatherAPI } from 'store/reducers/weatherReducer';
 import {
-  setCurrentWeather,
+  weatherAC,
   WeatherActionsType,
-} from 'store/reducers/weather/weatherReducer';
-import {
-  convertWeatherForState,
-  getCurrentPosition,
-  getDateNowInSeconds,
-  GetPositionReturned,
-} from 'utils';
-import {
-  convertLocationFromGeoAPIForState,
-  convertLocationFromWeatherAPIForState,
-} from 'utils/convertLocationForState';
+} from 'store/reducers/weatherReducer/weatherReducer';
+import { fetchGeolocation } from 'store/sagas/geolocationSagas/geolocationSagas';
+import { geolocationSelectors } from 'store/selectors';
+import { normalizeState } from 'utils/normalizeState/normalizeState';
 
 export enum weatherActions {
-  GET_CURRENT_WEATHER_BY_MY_COORDS = 'weather/GET_CURRENT_WEATHER_BY_MY_COORDS',
-  GET_CURRENT_WEATHER_BY_CITY_NAME = 'weather/GET_CURRENT_WEATHER_BY_CITY_NAME',
+  GET_OPEN_WEATHER = 'weather/GET_OPEN_WEATHER',
 }
 
-type GetCurrentWeatherWorkerSagaReturned = Generator<
-  | CallEffect<
-      | GetPositionReturned
-      | LocationFromGeoAPI
-      | GetCurrentWeatherResponse
-      | CurrentWeather
-    >
-  | PutEffect<WeatherActionsType>,
+export type FetchWeatherParams = {
+  localityName?: string;
+  weatherAPI?: WeatherAPI;
+};
+
+type FetchWeatherReturned = Generator<
+  | CallEffect<GetOpenWeatherResponseData | GetVisualCrossingWeatherResponseData | void>
+  | PutEffect<WeatherActionsType | AppActionsType>
+  | SelectEffect,
   void,
   never
 >;
 
-export function* fetchCurrentWeatherByMyCoords(): GetCurrentWeatherWorkerSagaReturned {
+export function* fetchWeather(
+  action: ReturnType<typeof weatherSagasAC.getOpenWeather>,
+): FetchWeatherReturned {
   try {
-    const { latitude, longitude }: GetPositionReturned = yield call(getCurrentPosition);
-    const location: LocationFromGeoAPI = yield call(geocodingAPI.getLocation, {
-      latitude,
-      longitude,
-    });
-    const locationForState = convertLocationFromGeoAPIForState(location);
+    yield put(appAC.setStatus({ status: 'loading' }));
+    if (action.payload) {
+      yield call(fetchGeolocation, { localityName: action.payload.localityName });
+    } else {
+      yield call(fetchGeolocation);
+    }
 
-    yield put(setLocation(locationForState));
-    const weatherFromAPI: GetCurrentWeatherResponse = yield call(
-      weatherAPI.getCurrentWeather,
-      {
-        latitude,
-        longitude,
-        date1: getDateNowInSeconds(),
-      },
-    );
-    const currentWeather: CurrentWeather = yield call(
-      convertWeatherForState,
-      weatherFromAPI,
-    );
+    const latitude = yield select(geolocationSelectors.latitude);
+    const longitude = yield select(geolocationSelectors.longitude);
 
-    yield put(setCurrentWeather(currentWeather));
+    const isVisualCrossingAPISelected =
+      action.payload?.weatherAPI === WeatherAPI.VISUAL_CROSSING_WEATHER;
+
+    if (latitude && longitude) {
+      if (isVisualCrossingAPISelected) {
+        const weather: GetVisualCrossingWeatherResponseData = yield call(
+          visualCrossingWeatherAPI.getCurrentWeather,
+          { latitude, longitude },
+        );
+
+        const weatherState = normalizeState.visualCrossingWeather(weather);
+
+        yield put(weatherAC.setGeneralWeather(weatherState));
+      } else {
+        const weather: GetOpenWeatherResponseData = yield call(
+          openWeatherAPI.getWeather,
+          {
+            latitude,
+            longitude,
+          },
+        );
+
+        const weatherState = normalizeState.openWeather(weather);
+
+        yield put(weatherAC.setGeneralWeather(weatherState));
+      }
+    }
+    yield put(appAC.setStatus({ status: 'succeeded' }));
   } catch (e) {
-    console.log(e);
+    if (e instanceof TypeError) {
+      console.log('Nothing found for your request');
+      yield put(
+        appAC.setErrorMessage({ errorMessage: 'Nothing found for your request' }),
+      );
+    } else {
+      yield put(appAC.setErrorMessage({ errorMessage: e as string }));
+      console.log(e);
+    }
+    yield put(appAC.setStatus({ status: 'failed' }));
   }
 }
 
-export function* fetchCurrentWeatherByCityName(
-  action: ReturnType<typeof getCurrentWeatherByCityName>,
-): GetCurrentWeatherWorkerSagaReturned {
-  try {
-    const cityName = action.payload?.cityName;
-    const weatherFromAPI: GetCurrentWeatherResponse = yield call(
-      weatherAPI.getCurrentWeather,
-      {
-        cityName,
-        date1: getDateNowInSeconds(),
-      },
-    );
-
-    const currentWeather: CurrentWeather = yield call(
-      convertWeatherForState,
-      weatherFromAPI,
-    );
-    const locationForState = convertLocationFromWeatherAPIForState(weatherFromAPI);
-
-    yield put(setCurrentWeather(currentWeather));
-    yield put(setLocation(locationForState));
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-export const getCurrentWeatherByMyCoords = (): ActionType<weatherActions, void> =>
-  ({
-    type: weatherActions.GET_CURRENT_WEATHER_BY_MY_COORDS,
-  } as const);
-
-export const getCurrentWeatherByCityName = (
-  cityName?: string,
-): ActionType<weatherActions, { cityName?: string }> =>
-  ({
-    type: weatherActions.GET_CURRENT_WEATHER_BY_CITY_NAME,
-    payload: { cityName },
-  } as const);
+export const weatherSagasAC = {
+  getOpenWeather(params?: FetchWeatherParams): {
+    type: weatherActions.GET_OPEN_WEATHER;
+    payload?: FetchWeatherParams;
+  } {
+    return {
+      type: weatherActions.GET_OPEN_WEATHER,
+      payload: params,
+    } as const;
+  },
+};
 
 export function* weatherWatcherSaga(): Generator {
-  yield takeEvery(
-    weatherActions.GET_CURRENT_WEATHER_BY_MY_COORDS,
-    fetchCurrentWeatherByMyCoords,
-  );
-  yield takeEvery(
-    weatherActions.GET_CURRENT_WEATHER_BY_CITY_NAME,
-    fetchCurrentWeatherByCityName,
-  );
+  yield takeLatest(weatherActions.GET_OPEN_WEATHER, fetchWeather);
 }
