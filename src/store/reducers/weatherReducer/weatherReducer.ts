@@ -11,6 +11,7 @@ enum WEATHER_ACTIONS_TYPE {
   SET_HOURLY_WEATHER = 'weather/SET_HOURLY_WEATHER',
   SET_DAILY_WEATHER = 'weather/SET_DAILY_WEATHER',
   SET_GENERAL_WEATHER = 'weather/SET_GENERAL_WEATHER',
+  SET_FORECAST_TYPE = 'weather/SET_FORECAST_TYPE',
 }
 
 export type WeatherInitialState = typeof initialState;
@@ -19,11 +20,13 @@ export type WeatherConditionState = Omit<
   'selectedWeatherAPI' | 'weatherForecast'
 >;
 
-type WeatherACParam<F> = F extends WeatherForecast.HOURLY
+type WeatherACParam<T = void, F = void> = F extends WeatherForecast
+  ? { weatherForecast: WeatherForecast }
+  : T extends WeatherForecast.HOURLY
   ? { hourlyWeather: HourlyWeather }
-  : F extends WeatherForecast.DAILY
+  : T extends WeatherForecast.DAILY
   ? { dailyWeather: DailyWeather }
-  : F extends void
+  : T extends void
   ? { currentWeather: CurrentWeather }
   : { generalWeather: WeatherInitialState };
 
@@ -31,7 +34,8 @@ export type WeatherActionsType =
   | ReturnType<typeof weatherAC.setCurrentWeather>
   | ReturnType<typeof weatherAC.setHourlyWeather>
   | ReturnType<typeof weatherAC.setDailyWeather>
-  | ReturnType<typeof weatherAC.setGeneralWeather>;
+  | ReturnType<typeof weatherAC.setGeneralWeather>
+  | ReturnType<typeof weatherAC.setForecastType>;
 
 const initialState = {
   currentWeather: {
@@ -52,7 +56,8 @@ export const weatherReducer = (
     case WEATHER_ACTIONS_TYPE.SET_GENERAL_WEATHER:
     case WEATHER_ACTIONS_TYPE.SET_CURRENT_WEATHER:
     case WEATHER_ACTIONS_TYPE.SET_HOURLY_WEATHER:
-    case WEATHER_ACTIONS_TYPE.SET_DAILY_WEATHER: {
+    case WEATHER_ACTIONS_TYPE.SET_DAILY_WEATHER:
+    case WEATHER_ACTIONS_TYPE.SET_FORECAST_TYPE: {
       return { ...state, ...action.payload };
     }
     default:
@@ -98,5 +103,16 @@ export const weatherAC = {
       type: WEATHER_ACTIONS_TYPE.SET_GENERAL_WEATHER,
       payload: generalWeather,
     } as const;
+  },
+  setForecastType(
+    forecastType: WeatherACParam<void, WeatherForecast>,
+  ): PayloadAction<
+    WEATHER_ACTIONS_TYPE.SET_FORECAST_TYPE,
+    WeatherACParam<void, WeatherForecast>
+  > {
+    return {
+      type: WEATHER_ACTIONS_TYPE.SET_FORECAST_TYPE,
+      payload: forecastType,
+    };
   },
 };

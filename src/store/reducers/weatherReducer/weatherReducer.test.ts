@@ -94,3 +94,12 @@ test('The weather should be added to the state', () => {
   expect(endState.hourlyWeather).toEqual(weatherData.hourlyWeather);
   expect(endState.dailyWeather).toEqual(weatherData.dailyWeather);
 });
+
+test('The correct weatherForecast value should be set to the state', () => {
+  const action = weatherAC.setForecastType({ weatherForecast: WeatherForecast.DAILY });
+
+  const endState = weatherReducer(startState, action);
+
+  expect(startState.weatherForecast).toBe(WeatherForecast.HOURLY);
+  expect(endState.weatherForecast).toBe(WeatherForecast.DAILY);
+});
