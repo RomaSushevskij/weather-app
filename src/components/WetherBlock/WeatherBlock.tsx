@@ -2,15 +2,15 @@ import { memo } from 'react';
 
 import style from './WeatherBlock.module.scss';
 
-import { weatherIcons } from 'api/weatherAPI';
 import { Chip } from 'components/Chip';
-import { WeatherIcon } from 'components/WetherBlock/WeatherIcon/WeatherIcon';
+import { WeatherIcon } from 'components/WetherBlock/WeatherIcon';
+import { WeatherIcons } from 'store/reducers/weatherReducer';
 import { getWeatherIconLink } from 'utils';
 
 type WeatherBlockProps = {
   date: string;
   temp: number;
-  icon: weatherIcons;
+  icon: WeatherIcons;
   isCurrentDate?: boolean;
 };
 
