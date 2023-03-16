@@ -1,33 +1,29 @@
 import { useEffect } from 'react';
 
-import axios from 'axios';
-
 import style from './App.module.scss';
 
 import { WeatherFrame } from 'components';
+import { useAppDispatch } from 'hooks';
+import { weatherSagasAC } from 'store/sagas/weather/weatherSagas';
 import { ReturnComponent } from 'types';
 
 const App = (): ReturnComponent => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   //
   // useEffect(() => {
   //   dispatch(getCurrentWeatherByMyCoords());
   // }, [dispatch]);
 
+  // useEffect(() => {
+  //   visualCrossingWeatherAPI
+  //     .getCurrentWeather({ latitude: 53.9037, longitude: 27.5655 })
+  //     .then(res => {
+  //       console.log(normalizeState.visualCrossingWeather(res));
+  //     });
+  // }, []);
   useEffect(() => {
-    axios.get(
-      // eslint-disable-next-line no-magic-numbers
-      `https://api.openweathermap.org/data/2.5/onecall`,
-      {
-        params: {
-          units: 'metric',
-          lat: 52.4239,
-          lon: 31.0132,
-          appid: 'ad92da7f16e16b2606c4873052bbb52e',
-        },
-      },
-    );
-  }, []);
+    dispatch(weatherSagasAC.getOpenWeather());
+  }, [dispatch]);
 
   return (
     <div className={style.app}>
