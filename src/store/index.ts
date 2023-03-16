@@ -1,2 +1,2 @@
 export { store } from './store';
-export type { ActionType, AppStateType, AppDispatch } from './types';
+export type { Action, AppStateType, AppDispatch } from './types';

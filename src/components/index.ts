@@ -7,3 +7,4 @@ export { WeatherBlock } from './WetherBlock';
 export { WeatherIcon } from './WetherBlock/WeatherIcon';
 export { Input } from './Input/Input';
 export { ToggleButton } from './ToggleButton/ToggleButton';
+export { Preloader } from './Preloader';

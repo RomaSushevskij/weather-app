@@ -1,2 +1,2 @@
-export { weatherAPI } from './weatherAPI/weatherAPI';
-export { geocodingAPI } from './geocodingAPI/geocodingAPI';
+export { visualCrossingWeatherAPI } from 'api/visualCrossingWeatherAPI/visualCrossingWeatherAPI';
+export { geocodeAPI } from 'api/geocodeAPI/geocodeAPI';
