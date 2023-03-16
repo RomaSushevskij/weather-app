@@ -1,32 +1,32 @@
-import { WeatherCondition, weatherIcons } from 'api/weatherAPI';
+import { WeatherData, WeatherIcons } from 'store/reducers/weatherReducer';
 
-const weateher: WeatherCondition = {
-  icon: weatherIcons.PARTLY_CLOUDY_DAY,
+const weather: WeatherData = {
+  icon: WeatherIcons.PARTLY_CLOUDY_DAY,
   temp: 0,
   datetimeEpoch: 1678327200000,
 };
 
-const icons: weatherIcons[] = [
-  weatherIcons.WIND,
-  weatherIcons.SNOW,
-  weatherIcons.CLOUDY,
-  weatherIcons.RAIN,
-  weatherIcons.PARTLY_CLOUDY_DAY,
-  weatherIcons.CLEAR_DAY,
-  weatherIcons.CLEAR_NIGHT,
-  weatherIcons.FOG,
-  weatherIcons.PARTLY_CLOUDY_NIGHT,
-  weatherIcons.SHOWERS_DAY,
-  weatherIcons.SHOWERS_NIGHT,
-  weatherIcons.SNOW_SHOWERS_DAY,
-  weatherIcons.THUNDER_RAIN,
+const icons: WeatherIcons[] = [
+  WeatherIcons.WIND,
+  WeatherIcons.SNOW,
+  WeatherIcons.CLOUDY,
+  WeatherIcons.RAIN,
+  WeatherIcons.PARTLY_CLOUDY_DAY,
+  WeatherIcons.CLEAR_DAY,
+  WeatherIcons.CLEAR_NIGHT,
+  WeatherIcons.FOG,
+  WeatherIcons.PARTLY_CLOUDY_NIGHT,
+  WeatherIcons.SHOWERS_DAY,
+  WeatherIcons.SHOWERS_NIGHT,
+  WeatherIcons.SNOW_SHOWERS_DAY,
+  WeatherIcons.THUNDER_RAIN,
 ];
 // eslint-disable-next-line no-magic-numbers
 const temps: number[] = [0, 0, -1, -3, -4, -4, -7, -2, 0, 1, 2, 2, 3];
 
 // eslint-disable-next-line no-magic-numbers
-export const weatherData: WeatherCondition[] = new Array(24)
-  .fill(weateher)
+export const weatherData: WeatherData[] = new Array(24)
+  .fill(weather)
   .map((weather, i) => {
     // eslint-disable-next-line no-magic-numbers
     return {
