@@ -3,18 +3,18 @@ import { memo } from 'react';
 import style from './WeatherList.module.scss';
 
 import { WeatherBlock } from 'components';
-import { WeatherData } from 'store/reducers/weatherReducer';
+import { WeatherData, WeatherForecast } from 'store/reducers/weatherReducer';
 import { convertUnixToTime, convertUnixToWeekDay } from 'utils';
 
 type WeatherListProps = {
   weatherForecastData: WeatherData[];
-  weatherForecastType: 'hourly' | 'daily';
+  weatherForecastType: WeatherForecast;
 };
 export const WeatherList = memo(
   ({ weatherForecastData, weatherForecastType }: WeatherListProps) => {
     const weatherBlocks = weatherForecastData.map(({ temp, datetimeEpoch, icon }) => {
       const weatherDate =
-        weatherForecastType === 'hourly'
+        weatherForecastType === WeatherForecast.HOURLY
           ? convertUnixToTime(datetimeEpoch)
           : convertUnixToWeekDay(datetimeEpoch);
 

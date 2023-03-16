@@ -1,4 +1,4 @@
-import { CSSProperties, memo, useEffect, useState } from 'react';
+import { CSSProperties, memo, useEffect } from 'react';
 
 import style from './WeatherFrame.module.scss';
 
@@ -13,11 +13,11 @@ import {
   WeatherList,
 } from 'components';
 import { SearchIcon } from 'components/icons';
-import { EMPTY_STRING, TODAY } from 'constantsGlobal';
+import { EMPTY_STRING, NOW, TODAY } from 'constantsGlobal';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useInput } from 'hooks/useInput/useInput';
 import { weatherData } from 'mockData/mockData';
-import { WeatherForecast, WeatherIcons } from 'store/reducers/weatherReducer';
+import { weatherAC, WeatherForecast, WeatherIcons } from 'store/reducers/weatherReducer';
 import { weatherSagasAC } from 'store/sagas/weather/weatherSagas';
 import { appSelectors, geolocationSelectors, weatherSelectors } from 'store/selectors';
 
@@ -27,7 +27,8 @@ export const WeatherFrame = memo(() => {
   const dispatch = useAppDispatch();
   const { icon, temp } = useAppSelector(weatherSelectors.current);
   const hourlyWeather = useAppSelector(weatherSelectors.hourlyForecast);
-  // const forecastType = useAppSelector(weatherSelectors.forecastType);
+  const dailyWeather = useAppSelector(weatherSelectors.dailyForecast);
+  const forecastType = useAppSelector(weatherSelectors.forecastType);
   const city = useAppSelector(geolocationSelectors.city);
   const country = useAppSelector(geolocationSelectors.country);
   const appStatus = useAppSelector(appSelectors.status);
@@ -36,7 +37,8 @@ export const WeatherFrame = memo(() => {
     city || country || EMPTY_STRING,
   );
 
-  const [forecastType, setForecastType] = useState<WeatherForecast>(() => forecasts[0]);
+  const weatherForecastData =
+    forecastType === WeatherForecast.HOURLY ? hourlyWeather : dailyWeather;
 
   const styles: CSSProperties = {
     backgroundImage: `url(${bgcImage})`,
@@ -50,6 +52,10 @@ export const WeatherFrame = memo(() => {
         }),
       );
     }
+  };
+
+  const onForecastTypeChange = (forecastType: WeatherForecast): void => {
+    dispatch(weatherAC.setForecastType({ weatherForecast: forecastType }));
   };
 
   useEffect(() => {
@@ -74,19 +80,21 @@ export const WeatherFrame = memo(() => {
         <ToggleButton
           value={forecastType}
           options={forecasts}
-          onChangeOption={setForecastType}
+          onChangeOption={onForecastTypeChange}
         />
       </div>
       <div className={style.weather}>
         <WeatherBlock
-          date={TODAY}
+          date={forecastType === WeatherForecast.HOURLY ? NOW : TODAY}
           temp={temp || 0}
           icon={icon || WeatherIcons.CLEAR_DAY}
           isCurrentDate
         />
         <WeatherList
-          weatherForecastData={hourlyWeather.length ? hourlyWeather : weatherData}
-          weatherForecastType="hourly"
+          weatherForecastData={
+            weatherForecastData.length ? weatherForecastData : weatherData
+          }
+          weatherForecastType={forecastType}
         />
       </div>
       {appStatus === 'loading' && <Preloader />}
