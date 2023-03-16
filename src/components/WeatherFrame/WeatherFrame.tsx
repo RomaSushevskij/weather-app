@@ -2,12 +2,12 @@ import { CSSProperties, memo, useEffect, useState } from 'react';
 
 import style from './WeatherFrame.module.scss';
 
-import { weatherIcons } from 'api/weatherAPI';
 import bgcImage from 'assets/cloudly-background.jpg';
 import {
   DateDisplay,
   Input,
   Location,
+  Preloader,
   ToggleButton,
   WeatherBlock,
   WeatherList,
@@ -17,34 +17,44 @@ import { EMPTY_STRING, TODAY } from 'constantsGlobal';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useInput } from 'hooks/useInput/useInput';
 import { weatherData } from 'mockData/mockData';
-import { getCurrentWeatherByCityName } from 'store/sagas/weather/weatherSagas';
-import { selectCurrentWeather, selectWeatherLocation } from 'store/selectors';
-import { ForecastType } from 'types';
+import { WeatherForecast, WeatherIcons } from 'store/reducers/weatherReducer';
+import { weatherSagasAC } from 'store/sagas/weather/weatherSagas';
+import { appSelectors, geolocationSelectors, weatherSelectors } from 'store/selectors';
 
-const forecasts: ForecastType[] = ['Hourly', 'Daily'];
+const forecasts: WeatherForecast[] = [WeatherForecast.HOURLY, WeatherForecast.DAILY];
 
 export const WeatherFrame = memo(() => {
   const dispatch = useAppDispatch();
-  const { icon, temp, hourlyWeather } = useAppSelector(selectCurrentWeather);
-  const { cityName, country } = useAppSelector(selectWeatherLocation);
+  const { icon, temp } = useAppSelector(weatherSelectors.current);
+  const hourlyWeather = useAppSelector(weatherSelectors.hourlyForecast);
+  // const forecastType = useAppSelector(weatherSelectors.forecastType);
+  const city = useAppSelector(geolocationSelectors.city);
+  const country = useAppSelector(geolocationSelectors.country);
+  const appStatus = useAppSelector(appSelectors.status);
 
   const { inputValue, onInputValueChange, handleSetInputValue } = useInput(
-    cityName ?? 'City name',
+    city || country || EMPTY_STRING,
   );
 
-  const [forecastType, setForecastType] = useState<ForecastType>(() => forecasts[0]);
+  const [forecastType, setForecastType] = useState<WeatherForecast>(() => forecasts[0]);
 
   const styles: CSSProperties = {
     backgroundImage: `url(${bgcImage})`,
   };
 
   const fetchWeatherByCityName = (): void => {
-    dispatch(getCurrentWeatherByCityName(inputValue));
+    if (inputValue) {
+      dispatch(
+        weatherSagasAC.getOpenWeather({
+          localityName: inputValue,
+        }),
+      );
+    }
   };
 
   useEffect(() => {
-    handleSetInputValue(cityName ?? EMPTY_STRING);
-  }, [cityName]);
+    handleSetInputValue(city || country || EMPTY_STRING);
+  }, [city, country, handleSetInputValue]);
 
   return (
     <div className={style.weatherFrameWrp} style={styles}>
@@ -58,7 +68,7 @@ export const WeatherFrame = memo(() => {
       </div>
       <div className={style.dateAndLocation}>
         <DateDisplay />
-        <Location cityName={cityName || 'City name'} country={country || 'Country'} />
+        <Location city={city} country={country} />
       </div>
       <div className={style.forecastSelection}>
         <ToggleButton
@@ -71,7 +81,7 @@ export const WeatherFrame = memo(() => {
         <WeatherBlock
           date={TODAY}
           temp={temp || 0}
-          icon={icon || weatherIcons.CLEAR_DAY}
+          icon={icon || WeatherIcons.CLEAR_DAY}
           isCurrentDate
         />
         <WeatherList
@@ -79,6 +89,7 @@ export const WeatherFrame = memo(() => {
           weatherForecastType="hourly"
         />
       </div>
+      {appStatus === 'loading' && <Preloader />}
     </div>
   );
 });
