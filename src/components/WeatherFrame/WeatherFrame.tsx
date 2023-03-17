@@ -2,8 +2,10 @@ import { CSSProperties, memo, useEffect } from 'react';
 
 import style from './WeatherFrame.module.scss';
 
+import { apiCalendar } from 'api/config';
 import bgcImage from 'assets/cloudly-background.jpg';
 import {
+  CalendarEvents,
   DateDisplay,
   Input,
   Location,
@@ -42,6 +44,7 @@ export const WeatherFrame = memo(() => {
   const city = useAppSelector(geolocationSelectors.city);
   const country = useAppSelector(geolocationSelectors.country);
   const appStatus = useAppSelector(appSelectors.status);
+  const geolocation = useAppSelector(geolocationSelectors.geoLocation);
 
   const { inputValue, onInputValueChange, handleSetInputValue } = useInput(
     city || country || EMPTY_STRING,
@@ -70,7 +73,20 @@ export const WeatherFrame = memo(() => {
   };
 
   const onWeatherAPIChange = (weatherAPI: WeatherAPI): void => {
-    dispatch(weatherAC.setWeatherAPI({ weatherAPI }));
+    if (city) {
+      dispatch(weatherSagasAC.getWeather({ weatherAPI, localityName: city as string }));
+      if ((city && inputValue !== city) || inputValue !== country) {
+        handleSetInputValue(city);
+      }
+    }
+  };
+
+  const onSignInClick = async (): Promise<void> => {
+    await apiCalendar.handleAuthClick();
+    const calendars = await apiCalendar.listEvents({});
+
+    console.log(calendars);
+    // await apiCalendar.handleSignoutClick();
   };
 
   useEffect(() => {
@@ -78,20 +94,14 @@ export const WeatherFrame = memo(() => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (city) {
-      dispatch(weatherSagasAC.getWeather({ weatherAPI, localityName: city as string }));
-      if ((city && inputValue !== city) || inputValue !== country) {
-        handleSetInputValue(city);
-      }
-    }
-  }, [weatherAPI, dispatch]);
-
-  useEffect(() => {
-    handleSetInputValue(city || country || EMPTY_STRING);
-  }, [city, country, handleSetInputValue]);
+    handleSetInputValue(geolocation.city || geolocation.country || EMPTY_STRING);
+  }, [geolocation, handleSetInputValue]);
 
   return (
     <div className={style.weatherFrameWrp} style={styles}>
+      <button style={{ zIndex: 4 }} type="button" onClick={onSignInClick}>
+        Sign In
+      </button>
       <div className={style.citySelection}>
         <Input
           value={inputValue}
@@ -104,19 +114,22 @@ export const WeatherFrame = memo(() => {
         <DateDisplay />
         <Location city={city} country={country} />
       </div>
+      <div className={style.calendarEvents}>
+        <CalendarEvents />
+      </div>
       <div className={style.selection}>
-        <div>
-          <ToggleButton
-            value={weatherAPI}
-            options={weatherAPIs}
-            onChangeOption={onWeatherAPIChange}
-          />
-        </div>
         <div>
           <ToggleButton
             value={forecastType}
             options={forecasts}
             onChangeOption={onForecastTypeChange}
+          />
+        </div>
+        <div>
+          <ToggleButton
+            value={weatherAPI}
+            options={weatherAPIs}
+            onChangeOption={onWeatherAPIChange}
           />
         </div>
       </div>

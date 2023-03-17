@@ -1,3 +1,4 @@
+import { GeolocationData } from 'store/reducers/geolocationReducer';
 import { AppStateType } from 'store/types';
 import { Nullable } from 'types';
 
@@ -13,5 +14,8 @@ export const geolocationSelectors = {
   },
   longitude(state: AppStateType): Nullable<number> {
     return state.geolocation.lon;
+  },
+  geoLocation(state: AppStateType): GeolocationData {
+    return state.geolocation;
   },
 };

@@ -18,7 +18,7 @@ import {
   WeatherActionsType,
 } from 'store/reducers/weatherReducer/weatherReducer';
 import { fetchGeolocation } from 'store/sagas/geolocationSagas/geolocationSagas';
-import { geolocationSelectors } from 'store/selectors';
+import { geolocationSelectors, weatherSelectors } from 'store/selectors';
 import { checkIfGeolocationIsRequired, normalizeState } from 'utils';
 
 export enum weatherActions {
@@ -43,36 +43,46 @@ export function* fetchWeather(
 ): FetchWeatherReturned {
   try {
     yield put(appAC.setStatus({ status: 'loading' }));
-    const city = yield select(geolocationSelectors.city);
-    const country = yield select(geolocationSelectors.country);
 
-    const isGeolocationChanged = checkIfGeolocationIsRequired({
-      searchLocality: action.payload?.localityName,
-      stateCity: city,
-      stateCountry: country,
+    const prevCity = yield select(geolocationSelectors.city);
+    const prevCountry = yield select(geolocationSelectors.country);
+    const prevWeatherAPI = yield select(weatherSelectors.weatherAPI);
+    const nextLocalityName = action.payload.localityName;
+    const prevLatitude = yield select(geolocationSelectors.latitude);
+    const prevLongitude = yield select(geolocationSelectors.longitude);
+    const nextWeatherAPI = action.payload.weatherAPI;
+
+    const isVisualCrossingAPISelected =
+      action.payload.weatherAPI === WeatherAPI.VISUAL_CROSSING_WEATHER;
+    const isWeatherAPIChanged = prevWeatherAPI !== nextWeatherAPI;
+    const isLocalityNameChanged = checkIfGeolocationIsRequired({
+      searchLocality: nextLocalityName,
+      stateCity: prevCity,
+      stateCountry: prevCountry,
     });
 
-    if (isGeolocationChanged) {
-      if (action.payload.localityName) {
-        yield call(fetchGeolocation, { localityName: action.payload.localityName });
+    if (isLocalityNameChanged) {
+      if (nextLocalityName) {
+        yield call(fetchGeolocation, { localityName: nextLocalityName });
       } else {
         yield call(fetchGeolocation);
       }
     }
 
-    const latitude = yield select(geolocationSelectors.latitude);
-    const longitude = yield select(geolocationSelectors.longitude);
+    const nextLatitude = yield select(geolocationSelectors.latitude);
+    const nextLongitude = yield select(geolocationSelectors.longitude);
+    const isNextCoordsMatchPrev =
+      nextLatitude === prevLatitude && nextLongitude === prevLongitude;
 
-    const isVisualCrossingAPISelected =
-      action.payload?.weatherAPI === WeatherAPI.VISUAL_CROSSING_WEATHER;
-
-    if (latitude && longitude) {
+    if (
+      (!isNextCoordsMatchPrev && nextLatitude && nextLongitude) ||
+      isWeatherAPIChanged
+    ) {
       if (isVisualCrossingAPISelected) {
         const weather: GetVisualCrossingWeatherResponseData = yield call(
           visualCrossingWeatherAPI.getCurrentWeather,
-          { latitude, longitude },
+          { latitude: nextLatitude, longitude: nextLongitude },
         );
-
         const weatherState = normalizeState.visualCrossingWeather(weather);
 
         yield put(weatherAC.setGeneralWeather(weatherState));
@@ -80,15 +90,15 @@ export function* fetchWeather(
         const weather: GetOpenWeatherResponseData = yield call(
           openWeatherAPI.getWeather,
           {
-            latitude,
-            longitude,
+            latitude: nextLatitude,
+            longitude: nextLongitude,
           },
         );
-
         const weatherState = normalizeState.openWeather(weather);
 
         yield put(weatherAC.setGeneralWeather(weatherState));
       }
+      yield put(weatherAC.setWeatherAPI({ weatherAPI: nextWeatherAPI }));
     }
     yield put(appAC.setStatus({ status: 'succeeded' }));
   } catch (e) {

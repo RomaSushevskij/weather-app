@@ -13,9 +13,9 @@ export const checkIfGeolocationIsRequired = ({
   let isGeolocationChanged: boolean;
 
   if (stateCity === undefined) {
-    isGeolocationChanged = searchLocality !== stateCountry;
+    isGeolocationChanged = searchLocality.toLowerCase() !== stateCountry?.toLowerCase();
   } else {
-    isGeolocationChanged = searchLocality !== stateCity;
+    isGeolocationChanged = searchLocality.toLowerCase() !== stateCity?.toLowerCase();
   }
 
   return isGeolocationChanged;
