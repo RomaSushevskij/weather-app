@@ -6,10 +6,10 @@ import {
   geolocationAC,
   GeolocationActionsType,
 } from 'store/reducers/geolocationReducer/geolocationReducer';
-import { FetchWeatherParams } from 'store/sagas/weather/weatherSagas';
+import { FetchWeatherParams } from 'store/sagas/weatherSagas/weatherSagas';
 import { getCurrentPosition, GetPositionReturned } from 'utils';
 
-type FetchGeolocationParams = Omit<FetchWeatherParams, 'weatherAPI'>;
+export type FetchGeolocationParams = Omit<FetchWeatherParams, 'weatherAPI'>;
 
 export type FetchGeolocationReturned = Generator<
   CallEffect<GetPositionReturned | Geolocation> | PutEffect<GeolocationActionsType>,
@@ -20,19 +20,23 @@ export type FetchGeolocationReturned = Generator<
 export function* fetchGeolocation(
   locality?: FetchGeolocationParams,
 ): FetchGeolocationReturned {
-  let location: Geolocation;
+  try {
+    let location: Geolocation;
 
-  if (locality?.localityName) {
-    location = yield call(geocodeAPI.search, {
-      localityName: locality?.localityName,
-    });
-  } else {
-    const { latitude, longitude }: GetPositionReturned = yield call(getCurrentPosition);
+    if (locality?.localityName) {
+      location = yield call(geocodeAPI.search, {
+        localityName: locality?.localityName,
+      });
+    } else {
+      const { latitude, longitude }: GetPositionReturned = yield call(getCurrentPosition);
 
-    location = yield call(geocodeAPI.reverse, {
-      latitude,
-      longitude,
-    });
+      location = yield call(geocodeAPI.reverse, {
+        latitude,
+        longitude,
+      });
+    }
+    yield put(geolocationAC.setLocation(location));
+  } catch (e) {
+    console.log(e);
   }
-  yield put(geolocationAC.setLocation(location));
 }

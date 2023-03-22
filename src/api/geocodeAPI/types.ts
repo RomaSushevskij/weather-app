@@ -19,6 +19,6 @@ export type Geolocation = {
   lat: number;
   lon: number;
 };
-export type GeocodeReturned = {
+export type GeocodeResponseData = {
   results: Geolocation[];
 };

@@ -1,0 +1,70 @@
+@import "src/styles/variables";
+
+@mixin iconStyle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.btnWrp {
+  width: 100%;
+  position: relative;
+
+  .default {
+    box-sizing: border-box;
+    background: $primary08;
+    color: $textColor;
+    border: none;
+    border-radius: 6px;
+    padding: 7px;
+    font-weight: 400;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-shadow: $inputShadow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    &.paddingLeft {
+      padding-left: 30px;
+    }
+
+    &.paddingRight {
+      padding-right: 30px;
+    }
+
+    &:hover {
+      background: $primary09;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:active {
+      color: $textColor;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+
+  .startIcon {
+    @include iconStyle();
+    left: 5px;
+  }
+
+  .endIcon {
+    @include iconStyle();
+    right: 5px;
+  }
+}
+
+
+
+
+
+

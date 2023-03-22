@@ -3,7 +3,10 @@ import { GetOpenWeatherParams, GetOpenWeatherResponseData } from 'api/openWeathe
 import { OpenWeatherEndpoints } from 'api/openWeatherAPI/enums';
 
 export const openWeatherAPI = {
-  async getWeather({ latitude, longitude }: GetOpenWeatherParams) {
+  async getWeather({
+    latitude,
+    longitude,
+  }: GetOpenWeatherParams): Promise<GetOpenWeatherResponseData> {
     const { data } = await openWeather.get<GetOpenWeatherResponseData>(
       `/${OpenWeatherEndpoints.ONE_CALL}`,
       {

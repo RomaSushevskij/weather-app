@@ -1,6 +1,8 @@
+import { EventData } from 'api/googleAPI/types';
 import { GetOpenWeatherResponseData } from 'api/openWeatherAPI';
 import { GetVisualCrossingWeatherResponseData } from 'api/visualCrossingWeatherAPI';
 import { HOURS_IN_DAY, MS_IN_SECOND } from 'constantsGlobal';
+import { EventType } from 'store/reducers/eventsReducer';
 import { WeatherConditionState } from 'store/reducers/weatherReducer/weatherReducer';
 import { getDateNowInSeconds } from 'utils/getDateNowInSeconds/getDateNowInSeconds';
 import { normalizeWeatherIcon } from 'utils/normalizeWeatherIcon/normalizeWeatherIcon';
@@ -67,5 +69,12 @@ export const normalizeState = {
         datetimeEpoch: datetimeEpoch * MS_IN_SECOND,
       })),
     };
+  },
+  events(events: EventData[]): EventType[] {
+    return events.map(({ summary, start: { dateTime }, id }) => ({
+      id,
+      summary,
+      dateTime: new Date(dateTime).getTime(),
+    }));
   },
 };

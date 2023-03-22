@@ -30,7 +30,7 @@ beforeEach(() => {
   };
 });
 
-test('The current weather should be added to the state', () => {
+test('The current weatherSagas should be added to the state', () => {
   const currentWeather: CurrentWeather = {
     temp: 0,
     icon: WeatherIcons.CLEAR_DAY,
@@ -43,7 +43,7 @@ test('The current weather should be added to the state', () => {
   expect(endState.currentWeather.temp).toBe(currentWeather.temp);
 });
 
-test('The hourly weather should be added to the state', () => {
+test('The hourly weatherSagas should be added to the state', () => {
   const hourlyWeather: HourlyWeather = [
     { temp: 0, icon: WeatherIcons.CLEAR_DAY, datetimeEpoch: 1678327200000 },
     { temp: 1, icon: WeatherIcons.CLEAR_DAY, datetimeEpoch: 1678327200001 },
@@ -56,7 +56,7 @@ test('The hourly weather should be added to the state', () => {
   expect(endState.hourlyWeather).toEqual(hourlyWeather);
 });
 
-test('The daily weather should be added to the state', () => {
+test('The daily weatherSagas should be added to the state', () => {
   const dailyWeather: DailyWeather = [
     { temp: 0, icon: WeatherIcons.CLEAR_DAY, datetimeEpoch: 1678327200000 },
     { temp: 1, icon: WeatherIcons.CLEAR_DAY, datetimeEpoch: 1678327200001 },
@@ -69,7 +69,7 @@ test('The daily weather should be added to the state', () => {
   expect(endState.dailyWeather).toEqual(dailyWeather);
 });
 
-test('The weather should be added to the state', () => {
+test('The weatherSagas should be added to the state', () => {
   const weatherData: WeatherConditionState = {
     currentWeather: {
       icon: WeatherIcons.CLEAR_DAY,

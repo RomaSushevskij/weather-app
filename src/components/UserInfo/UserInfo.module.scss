@@ -1,0 +1,26 @@
+@import "src/styles/variables";
+
+.userInfo {
+  background-color: $inputBGC;
+  padding: 7px;
+  border-radius: 6px;
+  box-shadow: $inputShadow;
+  backdrop-filter: $inputFilter;
+  -webkit-backdrop-filter: $inputFilter;
+
+  p {
+    font-size: 10px;
+    color: $inputColor;
+    line-height: 1.3;
+    text-shadow: $textShadow;
+  }
+
+  p:first-child {
+    color: $textColor;
+  }
+
+  .signOutBtn {
+    margin: 7px auto 0 auto;
+    width: 80px;
+  }
+}

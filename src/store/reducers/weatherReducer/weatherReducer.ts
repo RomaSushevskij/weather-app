@@ -53,6 +53,7 @@ const initialState = {
 };
 
 export const weatherReducer = (
+  // eslint-disable-next-line default-param-last
   state: WeatherInitialState = initialState,
   action: WeatherActionsType,
 ): WeatherInitialState => {

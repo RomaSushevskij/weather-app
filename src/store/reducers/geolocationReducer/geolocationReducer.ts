@@ -16,6 +16,7 @@ const initialState = {
 } as GeolocationData;
 
 export const geolocationReducer = (
+  // eslint-disable-next-line default-param-last
   state: GeolocationInitialState = initialState,
   action: GeolocationActionsType,
 ): GeolocationInitialState => {

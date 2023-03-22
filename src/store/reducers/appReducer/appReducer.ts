@@ -26,6 +26,7 @@ const initialAppState = {
 };
 
 export const appReducer = (
+  // eslint-disable-next-line default-param-last
   state: AppInitialState = initialAppState,
   action: AppActionsType,
 ): AppInitialState => {

@@ -1,8 +1,19 @@
 .app {
-  background: linear-gradient(135deg, hsla(220, 40%, 51%, 1) 0%, hsla(220, 93%, 72%, 1) 45%, hsla(220, 40%, 51%, 1) 100%);
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &.clear-day {
+    background: linear-gradient(135deg, hsla(220, 40%, 51%, 1) 0%, hsla(220, 93%, 72%, 1) 45%, hsla(220, 40%, 51%, 1) 100%);
+  }
+
+  &.cloudy {
+    background: linear-gradient(135deg, rgb(206, 206, 206) 5%, rgb(182, 182, 182), rgb(206, 206, 206));
+  }
+
+  &.clear-night {
+    background: linear-gradient(315deg, rgb(27, 35, 47), rgb(43, 65, 98), rgb(27, 35, 47));
+  }
 }

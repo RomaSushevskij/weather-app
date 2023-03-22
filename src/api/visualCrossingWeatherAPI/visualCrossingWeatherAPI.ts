@@ -13,7 +13,7 @@ export const visualCrossingWeatherAPI = {
     latitude,
     date1,
     date2,
-  }: GetVisualCrossingWeatherParams) {
+  }: GetVisualCrossingWeatherParams): Promise<GetVisualCrossingWeatherResponseData> {
     const location = localityName || `${latitude},${longitude}`;
     const startDate = date1 ? `/${date1}` : EMPTY_STRING;
     const endDate = date2 ? `/${date2}` : EMPTY_STRING;

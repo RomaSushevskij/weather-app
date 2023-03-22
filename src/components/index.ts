@@ -8,3 +8,7 @@ export { WeatherIcon } from './WetherBlock/WeatherIcon';
 export { Input } from './Input/Input';
 export { ToggleButton } from './ToggleButton/ToggleButton';
 export { Preloader } from './Preloader';
+export { CalendarEvents } from './CalendarEvents';
+export { Event } from './CalendarEvents/Event';
+export { Button } from './Button';
+export { UserInfo } from './UserInfo';

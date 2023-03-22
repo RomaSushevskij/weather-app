@@ -1,10 +1,16 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { all } from 'redux-saga/effects';
+import { all, call } from 'redux-saga/effects';
 
-import { appReducer, geolocationReducer } from 'store/reducers';
+import {
+  appReducer,
+  authReducer,
+  eventsReducer,
+  geolocationReducer,
+} from 'store/reducers';
 import { weatherReducer } from 'store/reducers/weatherReducer';
-import { weatherWatcherSaga } from 'store/sagas';
+import { authWatcherSaga, weatherWatcherSaga } from 'store/sagas';
+import { appWatcherSaga } from 'store/sagas/appSagas/appSagas';
 
 declare global {
   interface Window {
@@ -16,8 +22,10 @@ const sagaMiddleware = createSagaMiddleware();
 
 export const rootReducer = combineReducers({
   app: appReducer,
+  auth: authReducer,
   weather: weatherReducer,
   geolocation: geolocationReducer,
+  events: eventsReducer,
 });
 
 export const store = createStore(
@@ -25,7 +33,7 @@ export const store = createStore(
   composeEnhancers(applyMiddleware(sagaMiddleware)),
 );
 export function* rootWatcherSaga(): Generator {
-  yield all([weatherWatcherSaga()]);
+  yield all([call(weatherWatcherSaga), call(authWatcherSaga), call(appWatcherSaga)]);
 }
 
 sagaMiddleware.run(rootWatcherSaga);

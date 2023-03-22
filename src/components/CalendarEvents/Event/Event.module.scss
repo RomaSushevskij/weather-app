@@ -1,0 +1,18 @@
+@import "src/styles/variables";
+
+.event {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  .dateTime {
+    width: 70px;
+  }
+
+  .description {
+    color: $textColor;
+    text-shadow: $textShadow;
+    font-weight: 500;
+    font-size: 13px;
+  }
+}

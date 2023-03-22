@@ -1,1 +1,2 @@
-export { weatherWatcherSaga } from './weather/weatherSagas';
+export { weatherWatcherSaga } from './weatherSagas/weatherSagas';
+export { authWatcherSaga } from './authSagas';

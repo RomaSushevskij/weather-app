@@ -19,24 +19,25 @@ import {
 } from 'store/reducers/weatherReducer/weatherReducer';
 import { fetchGeolocation } from 'store/sagas/geolocationSagas/geolocationSagas';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
+import { PayloadAction } from 'store/types';
 import { checkIfGeolocationIsRequired, normalizeState } from 'utils';
-
-export enum weatherActions {
-  GET_OPEN_WEATHER = 'weather/GET_OPEN_WEATHER',
-}
 
 export type FetchWeatherParams = {
   localityName: string;
   weatherAPI: WeatherAPI;
 };
 
-type FetchWeatherReturned = Generator<
+export type FetchWeatherReturned = Generator<
   | CallEffect<GetOpenWeatherResponseData | GetVisualCrossingWeatherResponseData | void>
   | PutEffect<WeatherActionsType | AppActionsType>
   | SelectEffect,
   void,
   never
 >;
+
+export enum weatherActionsType {
+  GET_WEATHER = 'weather/GET_WEATHER',
+}
 
 export function* fetchWeather(
   action: ReturnType<typeof weatherSagasAC.getWeather>,
@@ -116,17 +117,16 @@ export function* fetchWeather(
 }
 
 export const weatherSagasAC = {
-  getWeather(params: FetchWeatherParams): {
-    type: weatherActions.GET_OPEN_WEATHER;
-    payload: FetchWeatherParams;
-  } {
+  getWeather(
+    params: FetchWeatherParams,
+  ): PayloadAction<weatherActionsType.GET_WEATHER, FetchWeatherParams> {
     return {
-      type: weatherActions.GET_OPEN_WEATHER,
+      type: weatherActionsType.GET_WEATHER,
       payload: params,
     } as const;
   },
 };
 
 export function* weatherWatcherSaga(): Generator {
-  yield takeLatest(weatherActions.GET_OPEN_WEATHER, fetchWeather);
+  yield takeLatest(weatherActionsType.GET_WEATHER, fetchWeather);
 }

@@ -5,9 +5,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
+  padding: 2px 5px;
   background-color: $primary09;
   border-radius: 8px;
+  max-width: max-content;
 
   .label {
     text-transform: uppercase;
@@ -15,10 +16,11 @@
     letter-spacing: -.2px;
     color: $textColor;
     font-weight: 400;
+    text-align: center;
   }
 
   &.medium {
-    padding: 1px 7px;
+    padding: 3px 7px;
     border-radius: 12px;
 
     .label {
@@ -27,8 +29,12 @@
   }
 
   &.large {
-    font-size: 14px;
+
     border-radius: 12px;
-    padding: 1px 8px;
+    padding: 3px 8px;
+
+    .label {
+      font-size: 14px;
+    }
   }
 }
