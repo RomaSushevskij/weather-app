@@ -4,6 +4,7 @@ import style from './App.module.scss';
 
 import { Preloader, WeatherFrame } from 'components';
 import { useAppDispatch, useAppSelector } from 'hooks';
+import { useFullHeight } from 'hooks/useFullHeight/useFullHeight';
 import { WeatherIcons } from 'store/reducers/weatherReducer';
 import { appSagasAC } from 'store/sagas/appSagas/appSagas';
 import { appSelectors, weatherSelectors } from 'store/selectors';
@@ -14,6 +15,8 @@ const App = (): ReturnComponent => {
   const dispatch = useAppDispatch();
   const isInitialized = useAppSelector(appSelectors.isInitialized);
   const { icon } = useAppSelector(weatherSelectors.current);
+
+  useFullHeight();
 
   const [appBgcStyle, setAppBgcStyle] = useState<StyleWeatherType>(
     WeatherIcons.CLEAR_DAY,
