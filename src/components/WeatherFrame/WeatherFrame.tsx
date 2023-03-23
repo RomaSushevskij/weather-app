@@ -127,15 +127,6 @@ export const WeatherFrame = memo(() => {
     dispatch(authSagasAC.signOut());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   dispatch(
-  //     weatherSagasAC.getWeather({
-  //       weatherAPI,
-  //       localityName: geolocation.city || geolocation.country || EMPTY_STRING,
-  //     }),
-  //   );
-  // }, [dispatch]);
-
   useEffect(() => {
     handleSetInputValue(geolocation.city || geolocation.country || EMPTY_STRING);
   }, [geolocation, handleSetInputValue]);
