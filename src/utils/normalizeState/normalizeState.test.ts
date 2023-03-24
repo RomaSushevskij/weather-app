@@ -67,11 +67,11 @@ test('The normalizeState case visualCrossingWeather function should work correct
     days: new Array(15).fill({}).map((_, index) => ({
       temp: 0.3,
       icon: WeatherIcons.CLEAR_DAY,
-      datetimeEpoch: 0 + HOURS_IN_DAY * index,
+      datetimeEpoch: HOURS_IN_DAY * index,
       hours: new Array(HOURS_IN_DAY).fill({}).map((_, index) => ({
         temp: 0.3,
         icon: WeatherIcons.CLEAR_DAY,
-        datetimeEpoch: 0 + index,
+        datetimeEpoch: index,
       })),
     })),
   };
@@ -80,8 +80,9 @@ test('The normalizeState case visualCrossingWeather function should work correct
     visualCrossingWeatherData,
   );
 
-  expect(weatherState.currentWeather).toEqual(
-    visualCrossingWeatherData.currentConditions,
-  );
+  expect(weatherState.currentWeather).toEqual({
+    ...visualCrossingWeatherData.currentConditions,
+    temp: 0,
+  });
   expect(weatherState.hourlyWeather.length).toBe(HOURS_IN_DAY);
 });
