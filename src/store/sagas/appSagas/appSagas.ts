@@ -15,10 +15,11 @@ import {
   checkAuthorizationInfo,
   CheckAuthorizationInfoReturned,
 } from 'store/sagas/authSagas/authSagas';
+import { handleError } from 'store/sagas/handleError/handleError';
 import {
   fetchWeather,
   FetchWeatherReturned,
-  weatherActionsType,
+  weatherSagasActionsType,
 } from 'store/sagas/weatherSagas/weatherSagas';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
 import { Action } from 'store/types';
@@ -42,7 +43,7 @@ export function* initializeApp(): InitializeAppReturned {
     const geolocation: GeolocationData = yield select(geolocationSelectors.geoLocation);
 
     yield call(fetchWeather, {
-      type: weatherActionsType.GET_WEATHER,
+      type: weatherSagasActionsType.GET_WEATHER,
       payload: {
         weatherAPI,
         localityName: geolocation.city || geolocation.country || EMPTY_STRING,
@@ -51,7 +52,7 @@ export function* initializeApp(): InitializeAppReturned {
     yield call(checkAuthorizationInfo);
     yield put(appAC.setInitialized({ isInitialized: true }));
   } catch (e) {
-    console.log(e);
+    yield call(handleError, e);
   }
 }
 

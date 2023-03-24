@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import { call, CallEffect, put, PutEffect, takeLatest } from 'redux-saga/effects';
 
 import { googleAPI } from 'api/googleAPI';
@@ -8,6 +7,7 @@ import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
 import { authAC, AuthActionsType } from 'store/reducers/authReducer/authReducer';
 import { eventsAC, EventsActionsType } from 'store/reducers/eventsReducer/eventsReducer';
 import { fetchEvents } from 'store/sagas/eventsSagas';
+import { handleError } from 'store/sagas/handleError/handleError';
 import { Action } from 'store/types';
 import { Nullable } from 'types';
 
@@ -51,13 +51,7 @@ export function* checkAuthorizationInfo(): CheckAuthorizationInfoReturned {
       yield put(appAC.setStatus({ status: 'failed' }));
     }
   } catch (e) {
-    const error = e as AxiosError;
-    const NOT_AUTHORIZED = 401;
-
-    if (error.response?.status === NOT_AUTHORIZED) {
-      yield call(signOut);
-    }
-    yield put(appAC.setStatus({ status: 'failed' }));
+    yield call(handleError, e);
   }
 }
 

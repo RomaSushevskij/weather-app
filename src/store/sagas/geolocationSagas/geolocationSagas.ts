@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import { call, CallEffect, put, PutEffect } from 'redux-saga/effects';
 
 import { geocodeAPI } from 'api';
@@ -9,13 +8,14 @@ import {
   geolocationAC,
   GeolocationActionsType,
 } from 'store/reducers/geolocationReducer/geolocationReducer';
+import { handleError } from 'store/sagas/handleError/handleError';
 import { FetchWeatherParams } from 'store/sagas/weatherSagas/weatherSagas';
 import { getCurrentPosition, GetPositionReturned } from 'utils';
 
 export type FetchGeolocationParams = Omit<FetchWeatherParams, 'weatherAPI'>;
 
 export type FetchGeolocationReturned = Generator<
-  | CallEffect<GetPositionReturned | Geolocation>
+  | CallEffect<GetPositionReturned | Geolocation | void>
   | PutEffect<GeolocationActionsType | AppActionsType>,
   void,
   never
@@ -43,11 +43,9 @@ export function* fetchGeolocation(
   } catch (e) {
     if (e instanceof TypeError) {
       yield put(appAC.setErrorMessage({ errorMessage: errorMessages.NOTHING_FOUND }));
-    } else if (e instanceof AxiosError) {
-      yield put(
-        appAC.setErrorMessage({ errorMessage: e.response?.data.message || e.message }),
-      );
+      yield put(appAC.setStatus({ status: 'failed' }));
+    } else {
+      yield call(handleError, e);
     }
-    yield put(appAC.setStatus({ status: 'failed' }));
   }
 }

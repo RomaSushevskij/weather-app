@@ -9,15 +9,21 @@ import {
 } from 'redux-saga/effects';
 
 import { visualCrossingWeatherAPI } from 'api';
-import { GetOpenWeatherResponseData, openWeatherAPI } from 'api/openWeatherAPI';
+import {
+  GetOpenWeatherParams,
+  GetOpenWeatherResponseData,
+  openWeatherAPI,
+} from 'api/openWeatherAPI';
 import { GetVisualCrossingWeatherResponseData } from 'api/visualCrossingWeatherAPI';
 import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
 import { WeatherAPI } from 'store/reducers/weatherReducer';
 import {
   weatherAC,
   WeatherActionsType,
+  WeatherConditionState,
 } from 'store/reducers/weatherReducer/weatherReducer';
 import { fetchGeolocation } from 'store/sagas/geolocationSagas/geolocationSagas';
+import { handleError } from 'store/sagas/handleError/handleError';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
 import { PayloadAction } from 'store/types';
 import { checkIfGeolocationIsRequired, normalizeState } from 'utils';
@@ -35,7 +41,21 @@ export type FetchWeatherReturned = Generator<
   never
 >;
 
-export enum weatherActionsType {
+type FetchOpenWeatherReturned = Generator<
+  | CallEffect<GetOpenWeatherResponseData | WeatherConditionState | void>
+  | PutEffect<WeatherActionsType>,
+  void,
+  never
+>;
+
+type FetchVisualCrossingWeatherReturned = Generator<
+  | CallEffect<GetVisualCrossingWeatherResponseData | WeatherConditionState | void>
+  | PutEffect<WeatherActionsType>,
+  void,
+  never
+>;
+
+export enum weatherSagasActionsType {
   GET_WEATHER = 'weather/GET_WEATHER',
 }
 
@@ -79,46 +99,75 @@ export function* fetchWeather(
       (!isNextCoordsMatchPrev && nextLatitude && nextLongitude) ||
       isWeatherAPIChanged
     ) {
+      const coords = {
+        latitude: nextLatitude,
+        longitude: nextLongitude,
+      };
+
       if (isVisualCrossingAPISelected) {
-        const weather: GetVisualCrossingWeatherResponseData = yield call(
-          visualCrossingWeatherAPI.getCurrentWeather,
-          { latitude: nextLatitude, longitude: nextLongitude },
-        );
-        const weatherState = normalizeState.visualCrossingWeather(weather);
-
-        yield put(weatherAC.setGeneralWeather(weatherState));
+        yield call(fetchVisualCrossingWeather, coords);
       } else {
-        const weather: GetOpenWeatherResponseData = yield call(
-          openWeatherAPI.getWeather,
-          {
-            latitude: nextLatitude,
-            longitude: nextLongitude,
-          },
-        );
-        const weatherState = normalizeState.openWeather(weather);
-
-        yield put(weatherAC.setGeneralWeather(weatherState));
+        yield call(fetchOpenWeather, coords);
       }
       yield put(weatherAC.setWeatherAPI({ weatherAPI: nextWeatherAPI }));
     }
     yield put(appAC.setStatus({ status: 'succeeded' }));
   } catch (e) {
-    console.log(e);
-    yield put(appAC.setStatus({ status: 'failed' }));
+    yield call(handleError, e);
+  }
+}
+
+export function* fetchOpenWeather({
+  latitude,
+  longitude,
+}: GetOpenWeatherParams): FetchOpenWeatherReturned {
+  try {
+    const weather: GetOpenWeatherResponseData = yield call(openWeatherAPI.getWeather, {
+      latitude,
+      longitude,
+    });
+    const weatherState: WeatherConditionState = yield call(
+      normalizeState.openWeather,
+      weather,
+    );
+
+    yield put(weatherAC.setGeneralWeather(weatherState));
+  } catch (e) {
+    yield call(handleError, e);
+  }
+}
+
+export function* fetchVisualCrossingWeather({
+  latitude,
+  longitude,
+}: GetOpenWeatherParams): FetchVisualCrossingWeatherReturned {
+  try {
+    const weather: GetVisualCrossingWeatherResponseData = yield call(
+      visualCrossingWeatherAPI.getCurrentWeather,
+      { latitude, longitude },
+    );
+    const weatherState: WeatherConditionState = yield call(
+      normalizeState.visualCrossingWeather,
+      weather,
+    );
+
+    yield put(weatherAC.setGeneralWeather(weatherState));
+  } catch (e) {
+    yield call(handleError, e);
   }
 }
 
 export const weatherSagasAC = {
   getWeather(
     params: FetchWeatherParams,
-  ): PayloadAction<weatherActionsType.GET_WEATHER, FetchWeatherParams> {
+  ): PayloadAction<weatherSagasActionsType.GET_WEATHER, FetchWeatherParams> {
     return {
-      type: weatherActionsType.GET_WEATHER,
+      type: weatherSagasActionsType.GET_WEATHER,
       payload: params,
     } as const;
   },
 };
 
 export function* weatherWatcherSaga(): Generator {
-  yield takeLatest(weatherActionsType.GET_WEATHER, fetchWeather);
+  yield takeLatest(weatherSagasActionsType.GET_WEATHER, fetchWeather);
 }
