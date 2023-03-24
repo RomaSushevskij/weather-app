@@ -1,0 +1,27 @@
+.snackBarWrapper {
+  backdrop-filter: blur(2px);
+  box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.3);
+  padding: 10px 15px;
+  color: white;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  &.successBarWrapper {
+    background-color: rgba(46, 125, 50, 0.8);
+    border-left: 4px solid #2E7D32;
+  }
+
+  &.errorBarWrapper {
+    background-color: rgba(211, 47, 47, 0.8);
+    border-left: 4px solid #D32F2F;
+  }
+
+  .icon {
+    padding-right: 15px;
+    font-size: 22px;
+  }
+}
+
+
+

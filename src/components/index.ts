@@ -12,3 +12,4 @@ export { CalendarEvents } from './CalendarEvents';
 export { Event } from './CalendarEvents/Event';
 export { Button } from './Button';
 export { UserInfo } from './UserInfo';
+export { SnackBar } from './SnackBar';

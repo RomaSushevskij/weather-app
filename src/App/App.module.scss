@@ -11,10 +11,17 @@
   }
 
   &.cloudy {
-    background: linear-gradient(135deg, rgb(206, 206, 206) 5%, rgb(182, 182, 182), rgb(206, 206, 206));
+    background: linear-gradient(135deg, rgb(199, 213, 218) 5%, rgb(88, 102, 112), rgb(199, 213, 218));
   }
 
   &.clear-night {
     background: linear-gradient(315deg, rgb(27, 35, 47), rgb(43, 65, 98), rgb(27, 35, 47));
+  }
+
+  .snackBar {
+    z-index: 1;
+    position: absolute;
+    bottom: 20px;
+
   }
 }
