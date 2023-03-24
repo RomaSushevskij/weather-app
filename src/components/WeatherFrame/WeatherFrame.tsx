@@ -17,6 +17,7 @@ import {
   WeatherList,
 } from 'components';
 import { GoogleCalendarIcon, SearchIcon } from 'components/icons';
+import { InputClearBtn } from 'components/Input/InputClearBtn/InputClearBtn';
 import { EMPTY_STRING, NOW, TODAY } from 'constantsGlobal';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useInput } from 'hooks/useInput/useInput';
@@ -77,7 +78,7 @@ export const WeatherFrame = memo(() => {
     : `${style.calendarEvents} ${style.empty}`;
 
   const fetchWeatherByCityName = useCallback((): void => {
-    if (inputValue) {
+    if (inputValue.trim()) {
       dispatch(
         weatherSagasAC.getWeather({
           weatherAPI,
@@ -86,6 +87,10 @@ export const WeatherFrame = memo(() => {
       );
     }
   }, [dispatch, inputValue, weatherAPI]);
+
+  const onClearInputClick = (): void => {
+    handleSetInputValue(EMPTY_STRING);
+  };
 
   const onForecastTypeChange = useCallback(
     (forecastType: WeatherForecast): void => {
@@ -141,6 +146,9 @@ export const WeatherFrame = memo(() => {
             onChange={onInputValueChange}
             onEnter={fetchWeatherByCityName}
             startIcon={<SearchIcon width={20} height={20} color="#bac1d2" />}
+            endIcon={
+              inputValue ? <InputClearBtn onClick={onClearInputClick} /> : undefined
+            }
           />
         </div>
       </div>

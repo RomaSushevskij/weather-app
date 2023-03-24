@@ -24,7 +24,7 @@ export const useInput = (initialInputValue: string): UseInputReturned => {
 
   const onInputValueChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>): void => {
-      const currentValue = e.currentTarget.value.trim();
+      const currentValue = e.currentTarget.value;
 
       handleSetInputValue(currentValue);
     },
