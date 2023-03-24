@@ -103,15 +103,7 @@ export function* fetchWeather(
     }
     yield put(appAC.setStatus({ status: 'succeeded' }));
   } catch (e) {
-    if (e instanceof TypeError) {
-      console.log('Nothing found for your request');
-      yield put(
-        appAC.setErrorMessage({ errorMessage: 'Nothing found for your request' }),
-      );
-    } else {
-      yield put(appAC.setErrorMessage({ errorMessage: e as string }));
-      console.log(e);
-    }
+    console.log(e);
     yield put(appAC.setStatus({ status: 'failed' }));
   }
 }
