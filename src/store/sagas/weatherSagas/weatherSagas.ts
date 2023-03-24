@@ -122,6 +122,8 @@ export function* fetchOpenWeather({
   longitude,
 }: GetOpenWeatherParams): FetchOpenWeatherReturned {
   try {
+    // eslint-disable-next-line no-debugger
+    debugger;
     const weather: GetOpenWeatherResponseData = yield call(openWeatherAPI.getWeather, {
       latitude,
       longitude,
