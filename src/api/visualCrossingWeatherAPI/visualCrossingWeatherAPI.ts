@@ -5,6 +5,7 @@ import {
 } from 'api/visualCrossingWeatherAPI';
 import { VisualCrossingWeatherEndpoints } from 'api/visualCrossingWeatherAPI/enums';
 import { EMPTY_STRING } from 'constantsGlobal';
+import { cacheAPI } from 'services/localStorage';
 
 export const visualCrossingWeatherAPI = {
   async getCurrentWeather({
@@ -14,6 +15,12 @@ export const visualCrossingWeatherAPI = {
     date1,
     date2,
   }: GetVisualCrossingWeatherParams): Promise<GetVisualCrossingWeatherResponseData> {
+    const cachedData = cacheAPI.getVisualCrossingWeather({ latitude, longitude });
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     const location = localityName || `${latitude},${longitude}`;
     const startDate = date1 ? `/${date1}` : EMPTY_STRING;
     const endDate = date2 ? `/${date2}` : EMPTY_STRING;
@@ -27,6 +34,8 @@ export const visualCrossingWeatherAPI = {
           },
         },
       );
+
+    cacheAPI.setVisualCrossingWeather({ latitude, longitude }, data);
 
     return data;
   },

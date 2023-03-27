@@ -41,6 +41,7 @@ export const openWeatherData: GetOpenWeatherResponseData = {
       weather: [{ icon: OpenWeatherIcons.CLOUDY_DAY }],
     },
   ],
+  timezone_offset: 10,
 };
 
 export const visualCrossingWeatherData: GetVisualCrossingWeatherResponseData = {
@@ -59,6 +60,7 @@ export const visualCrossingWeatherData: GetVisualCrossingWeatherResponseData = {
       datetimeEpoch: index,
     })),
   })),
+  tzoffset: 10,
 };
 
 test('The normalizeState case openWeather function should work correctly', () => {

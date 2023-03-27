@@ -1,4 +1,5 @@
-import { GeolocationData } from 'store/reducers/geolocationReducer/types';
+import { getGeolocationFromLocalStorage } from 'services/localStorage';
+import { GeolocationData } from 'store/reducers/geolocationReducer';
 import { PayloadAction } from 'store/types';
 
 enum WEATHER_ACTIONS_TYPE {
@@ -8,12 +9,14 @@ enum WEATHER_ACTIONS_TYPE {
 export type GeolocationInitialState = typeof initialState;
 export type GeolocationActionsType = ReturnType<typeof geolocationAC.setLocation>;
 
-const initialState = {
-  city: null,
-  lat: null,
-  lon: null,
-  country: null,
-} as GeolocationData;
+const initialState =
+  getGeolocationFromLocalStorage() ||
+  ({
+    city: null,
+    lat: null,
+    lon: null,
+    country: null,
+  } as GeolocationData);
 
 export const geolocationReducer = (
   // eslint-disable-next-line default-param-last

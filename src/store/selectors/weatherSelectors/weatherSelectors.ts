@@ -5,6 +5,7 @@ import {
   WeatherData,
   WeatherAPI,
 } from 'store/reducers/weatherReducer';
+import { Nullable } from 'types';
 
 export const weatherSelectors = {
   current(state: AppStateType): CurrentWeather {
@@ -21,5 +22,8 @@ export const weatherSelectors = {
   },
   weatherAPI(state: AppStateType): WeatherAPI {
     return state.weather.weatherAPI;
+  },
+  timeZoneOffset(state: AppStateType): Nullable<number> {
+    return state.weather.timeZoneOffset;
   },
 };

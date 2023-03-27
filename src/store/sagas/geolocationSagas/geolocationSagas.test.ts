@@ -1,14 +1,15 @@
 import { call, put } from 'redux-saga/effects';
 
-import { geolocationAC } from '../../reducers/geolocationReducer/geolocationReducer';
-
 import { fetchGeolocation, FetchGeolocationParams } from './geolocationSagas';
 
 import { geocodeAPI } from 'api';
 import { Geolocation } from 'api/geocodeAPI/types';
 import { errorMessages } from 'enum';
-import { appAC } from 'store/reducers/appReducer/appReducer';
-import { getCurrentPosition, GetPositionReturned } from 'utils';
+import { setGeolocationToLocalStorage } from 'services/localStorage';
+import { appAC } from 'store/reducers/appReducer';
+import { geolocationAC } from 'store/reducers/geolocationReducer';
+import { weatherAC } from 'store/reducers/weatherReducer';
+import { getCurrentPosition, getMyTimeZoneOffset, GetPositionReturned } from 'utils';
 
 describe('fetchGeolocation should work correct', () => {
   const localityEmpty: FetchGeolocationParams = { localityName: '' };
@@ -33,6 +34,8 @@ describe('fetchGeolocation should work correct', () => {
     expect(gen.next(geoLocation).value).toEqual(
       put(geolocationAC.setLocation(geoLocation)),
     );
+    expect(gen.next().value).toEqual(call(setGeolocationToLocalStorage, geoLocation));
+    expect(gen.next().done).toBeTruthy();
   });
 
   it('Call fetchGeolocation with empty localityName', () => {
@@ -50,6 +53,7 @@ describe('fetchGeolocation should work correct', () => {
     expect(gen.next(geoLocation).value).toEqual(
       put(geolocationAC.setLocation(geoLocation)),
     );
+    expect(gen.next().value).toEqual(call(setGeolocationToLocalStorage, geoLocation));
     expect(gen.next().done).toBeTruthy();
   });
 
@@ -62,6 +66,22 @@ describe('fetchGeolocation should work correct', () => {
     expect(gen.throw(errorMessage).value).toEqual(
       put(appAC.setErrorMessage({ errorMessage: errorMessages.NOTHING_FOUND })),
     );
+
+    expect(gen.next().value).toEqual(
+      put(geolocationAC.setLocation({ lon: null, city: null, lat: null, country: null })),
+    );
+    expect(gen.next().value).toEqual(
+      put(
+        weatherAC.setGeneralWeather({
+          hourlyWeather: [],
+          dailyWeather: [],
+          currentWeather: { icon: null, temp: null },
+          timeZoneOffset: getMyTimeZoneOffset(),
+        }),
+      ),
+    );
+
     expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'failed' })));
+    expect(gen.next().done).toBeTruthy();
   });
 });

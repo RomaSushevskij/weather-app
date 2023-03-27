@@ -1,5 +1,9 @@
-import { EventType, eventsReducer } from 'store/reducers/eventsReducer';
-import { eventsAC, EventsInitialState } from 'store/reducers/eventsReducer/eventsReducer';
+import {
+  EventType,
+  eventsReducer,
+  eventsAC,
+  EventsInitialState,
+} from 'store/reducers/eventsReducer';
 
 let startState: EventsInitialState;
 

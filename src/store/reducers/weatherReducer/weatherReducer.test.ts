@@ -27,6 +27,7 @@ beforeEach(() => {
     dailyWeather: [] as DailyWeather,
     weatherAPI: WeatherAPI.OPEN_WEATHER,
     weatherForecast: WeatherForecast.HOURLY,
+    timeZoneOffset: null,
   };
 });
 
@@ -85,6 +86,7 @@ test('The weatherSagas should be added to the state', () => {
       { temp: 4, icon: WeatherIcons.SHOWERS_DAY, datetimeEpoch: 1678327200004 },
       { temp: 5, icon: WeatherIcons.PARTLY_CLOUDY_DAY, datetimeEpoch: 1678327200005 },
     ],
+    timeZoneOffset: null,
   };
 
   const action = weatherAC.setGeneralWeather(weatherData);

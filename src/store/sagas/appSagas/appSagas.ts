@@ -9,18 +9,19 @@ import {
 } from 'redux-saga/effects';
 
 import { EMPTY_STRING } from 'constantsGlobal';
-import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
+import { cacheAPI } from 'services/localStorage';
+import { appAC, AppActionsType } from 'store/reducers/appReducer';
 import { GeolocationData } from 'store/reducers/geolocationReducer';
 import {
   checkAuthorizationInfo,
   CheckAuthorizationInfoReturned,
 } from 'store/sagas/authSagas/authSagas';
-import { handleError } from 'store/sagas/handleError/handleError';
+import { handleError } from 'store/sagas/handleError';
 import {
   fetchWeather,
   FetchWeatherReturned,
   weatherSagasActionsType,
-} from 'store/sagas/weatherSagas/weatherSagas';
+} from 'store/sagas/weatherSagas';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
 import { Action } from 'store/types';
 
@@ -42,6 +43,7 @@ export function* initializeApp(): InitializeAppReturned {
     const weatherAPI = yield select(weatherSelectors.weatherAPI);
     const geolocation: GeolocationData = yield select(geolocationSelectors.geoLocation);
 
+    yield call(cacheAPI.updateCache);
     yield call(fetchWeather, {
       type: weatherSagasActionsType.GET_WEATHER,
       payload: {
@@ -49,6 +51,7 @@ export function* initializeApp(): InitializeAppReturned {
         localityName: geolocation.city || geolocation.country || EMPTY_STRING,
       },
     });
+
     yield call(checkAuthorizationInfo);
     yield put(appAC.setInitialized({ isInitialized: true }));
   } catch (e) {

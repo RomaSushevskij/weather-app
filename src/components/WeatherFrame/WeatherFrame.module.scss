@@ -77,10 +77,6 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
-
-    & > div {
-      margin-left: auto;
-    }
   }
 
   .weather {
@@ -110,8 +106,17 @@
     .calendarEvents {
       margin: 0 10px 0 20px;
     }
+    .selection {
+      & > div {
+        margin-left: auto;
+      }
+    }
     .weather {
       padding-top: 30px;
     }
+  }
+  @media screen and (max-height: 600px) {
+    min-width: 100vw;
+    height: calc(var(--vh, 1vh) * 100);
   }
 }

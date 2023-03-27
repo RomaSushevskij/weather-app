@@ -15,15 +15,15 @@ import {
   openWeatherAPI,
 } from 'api/openWeatherAPI';
 import { GetVisualCrossingWeatherResponseData } from 'api/visualCrossingWeatherAPI';
-import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
-import { WeatherAPI } from 'store/reducers/weatherReducer';
+import { appAC, AppActionsType } from 'store/reducers/appReducer';
 import {
+  WeatherAPI,
   weatherAC,
   WeatherActionsType,
   WeatherConditionState,
-} from 'store/reducers/weatherReducer/weatherReducer';
-import { fetchGeolocation } from 'store/sagas/geolocationSagas/geolocationSagas';
-import { handleError } from 'store/sagas/handleError/handleError';
+} from 'store/reducers/weatherReducer';
+import { fetchGeolocation } from 'store/sagas/geolocationSagas';
+import { handleError } from 'store/sagas/handleError';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
 import { PayloadAction } from 'store/types';
 import { checkIfGeolocationIsRequired, normalizeState } from 'utils';
@@ -34,7 +34,9 @@ export type FetchWeatherParams = {
 };
 
 export type FetchWeatherReturned = Generator<
-  | CallEffect<GetOpenWeatherResponseData | GetVisualCrossingWeatherResponseData | void>
+  | CallEffect<
+      GetOpenWeatherResponseData | GetVisualCrossingWeatherResponseData | void | boolean
+    >
   | PutEffect<WeatherActionsType | AppActionsType>
   | SelectEffect,
   void,
@@ -69,14 +71,12 @@ export function* fetchWeather(
     const prevCountry = yield select(geolocationSelectors.country);
     const prevWeatherAPI = yield select(weatherSelectors.weatherAPI);
     const nextLocalityName = action.payload.localityName;
-    const prevLatitude = yield select(geolocationSelectors.latitude);
-    const prevLongitude = yield select(geolocationSelectors.longitude);
     const nextWeatherAPI = action.payload.weatherAPI;
 
     const isVisualCrossingAPISelected =
       action.payload.weatherAPI === WeatherAPI.VISUAL_CROSSING_WEATHER;
     const isWeatherAPIChanged = prevWeatherAPI !== nextWeatherAPI;
-    const isLocalityNameChanged = checkIfGeolocationIsRequired({
+    const isLocalityNameChanged = yield call(checkIfGeolocationIsRequired, {
       searchLocality: nextLocalityName,
       stateCity: prevCity,
       stateCountry: prevCountry,
@@ -92,13 +92,8 @@ export function* fetchWeather(
 
     const nextLatitude = yield select(geolocationSelectors.latitude);
     const nextLongitude = yield select(geolocationSelectors.longitude);
-    const isNextCoordsMatchPrev =
-      nextLatitude === prevLatitude && nextLongitude === prevLongitude;
 
-    if (
-      (!isNextCoordsMatchPrev && nextLatitude && nextLongitude) ||
-      isWeatherAPIChanged
-    ) {
+    if ((nextLatitude && nextLongitude) || isWeatherAPIChanged) {
       const coords = {
         latitude: nextLatitude,
         longitude: nextLongitude,
@@ -110,8 +105,8 @@ export function* fetchWeather(
         yield call(fetchOpenWeather, coords);
       }
       yield put(weatherAC.setWeatherAPI({ weatherAPI: nextWeatherAPI }));
+      yield put(appAC.setStatus({ status: 'succeeded' }));
     }
-    yield put(appAC.setStatus({ status: 'succeeded' }));
   } catch (e) {
     yield call(handleError, e);
   }
@@ -122,8 +117,6 @@ export function* fetchOpenWeather({
   longitude,
 }: GetOpenWeatherParams): FetchOpenWeatherReturned {
   try {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const weather: GetOpenWeatherResponseData = yield call(openWeatherAPI.getWeather, {
       latitude,
       longitude,

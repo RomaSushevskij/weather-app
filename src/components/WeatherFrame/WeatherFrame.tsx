@@ -1,4 +1,4 @@
-import { CSSProperties, memo, useCallback, useEffect } from 'react';
+import { CSSProperties, memo, useCallback, useEffect, useRef } from 'react';
 
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 
@@ -17,12 +17,10 @@ import {
   WeatherList,
 } from 'components';
 import { GoogleCalendarIcon, SearchIcon } from 'components/icons';
-import { InputClearBtn } from 'components/Input/InputClearBtn/InputClearBtn';
-import { EMPTY_STRING, NOW, TODAY } from 'constantsGlobal';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { useInput } from 'hooks/useInput/useInput';
-import { weatherData } from 'mockData/mockData';
-import { ACCESS_TOKEN } from 'services/localStorage/localStorage';
+import { InputClearBtn } from 'components/Input/InputClearBtn';
+import { ACCESS_TOKEN_KEY, EMPTY_STRING, NOW } from 'constantsGlobal';
+import { useInput, useAppDispatch, useAppSelector } from 'hooks';
+import { setWeatherSettingToLocalStorage } from 'services/localStorage';
 import {
   weatherAC,
   WeatherAPI,
@@ -62,6 +60,10 @@ export const WeatherFrame = memo(() => {
   const name = useAppSelector(authSelectors.name);
   const events = useAppSelector(eventsSelectors.event);
 
+  const isWeatherData = icon && temp && hourlyWeather && dailyWeather;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const { inputValue, onInputValueChange, handleSetInputValue } = useInput(
     city || country || EMPTY_STRING,
   );
@@ -90,11 +92,16 @@ export const WeatherFrame = memo(() => {
 
   const onClearInputClick = (): void => {
     handleSetInputValue(EMPTY_STRING);
+    inputRef.current?.focus();
   };
 
   const onForecastTypeChange = useCallback(
     (forecastType: WeatherForecast): void => {
       dispatch(weatherAC.setForecastType({ weatherForecast: forecastType }));
+      setWeatherSettingToLocalStorage({
+        weatherForecast: forecastType,
+        weatherAPI,
+      });
     },
     [dispatch],
   );
@@ -104,11 +111,13 @@ export const WeatherFrame = memo(() => {
       dispatch(
         weatherSagasAC.getWeather({
           weatherAPI,
-          localityName: (city as string) || (country as string),
+          localityName: city || country || EMPTY_STRING,
         }),
       );
+      setWeatherSettingToLocalStorage({ weatherAPI, weatherForecast: forecastType });
+
       if ((city && inputValue !== city) || inputValue !== country) {
-        const resultLocalityName = city || country;
+        const resultLocalityName = city || country || EMPTY_STRING;
 
         handleSetInputValue(resultLocalityName as string);
       }
@@ -118,7 +127,7 @@ export const WeatherFrame = memo(() => {
 
   const onGetEventsClick = useGoogleLogin({
     onSuccess: async tokenResponse => {
-      localStorage.setItem(ACCESS_TOKEN, tokenResponse.access_token);
+      localStorage.setItem(ACCESS_TOKEN_KEY, tokenResponse.access_token);
       dispatch(authSagasAC.checkAuthorizationInfo());
     },
     scope: process.env.REACT_APP_GOOGLE_CLOUD_SCOPE,
@@ -133,7 +142,9 @@ export const WeatherFrame = memo(() => {
   }, [dispatch]);
 
   useEffect(() => {
-    handleSetInputValue(geolocation.city || geolocation.country || EMPTY_STRING);
+    handleSetInputValue(
+      geolocation.city || geolocation.country || inputValue || EMPTY_STRING,
+    );
   }, [geolocation, handleSetInputValue]);
 
   return (
@@ -143,6 +154,8 @@ export const WeatherFrame = memo(() => {
         <div className={style.citySelection}>
           <Input
             value={inputValue}
+            placeholder="City or country"
+            ref={inputRef}
             onChange={onInputValueChange}
             onEnter={fetchWeatherByCityName}
             startIcon={<SearchIcon width={20} height={20} color="#bac1d2" />}
@@ -168,36 +181,38 @@ export const WeatherFrame = memo(() => {
           </div>
         )}
       </div>
-      <div className={style.selection}>
-        <div>
-          <ToggleButton
-            value={forecastType}
-            options={forecasts}
-            onChangeOption={onForecastTypeChange}
-          />
-        </div>
-        <div>
-          <ToggleButton
-            value={weatherAPI}
-            options={weatherAPIs}
-            onChangeOption={onWeatherAPIChange}
-          />
-        </div>
-      </div>
-      <div className={style.weather}>
-        <WeatherBlock
-          date={forecastType === WeatherForecast.HOURLY ? NOW : TODAY}
-          temp={temp || 0}
-          icon={icon || WeatherIcons.CLEAR_DAY}
-          isCurrentDate
-        />
-        <WeatherList
-          weatherForecastData={
-            weatherForecastData.length ? weatherForecastData : weatherData
-          }
-          weatherForecastType={forecastType}
-        />
-      </div>
+      {isWeatherData && (
+        <>
+          <div className={style.selection}>
+            <div>
+              <ToggleButton
+                value={forecastType}
+                options={forecasts}
+                onChangeOption={onForecastTypeChange}
+              />
+            </div>
+            <div>
+              <ToggleButton
+                value={weatherAPI}
+                options={weatherAPIs}
+                onChangeOption={onWeatherAPIChange}
+              />
+            </div>
+          </div>
+          <div className={style.weather}>
+            <WeatherBlock
+              date={NOW}
+              temp={temp || 0}
+              icon={icon || WeatherIcons.CLEAR_DAY}
+              isCurrentDate
+            />
+            <WeatherList
+              weatherForecastData={weatherForecastData}
+              weatherForecastType={forecastType}
+            />
+          </div>
+        </>
+      )}
       {appStatus === 'loading' && <Preloader />}
     </div>
   );

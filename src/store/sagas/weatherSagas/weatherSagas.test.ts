@@ -19,7 +19,7 @@ import {
   weatherSagasActionsType,
 } from 'store/sagas/weatherSagas/weatherSagas';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
-import { normalizeState } from 'utils';
+import { checkIfGeolocationIsRequired, normalizeState } from 'utils';
 import {
   openWeatherData,
   visualCrossingWeatherData,
@@ -97,33 +97,163 @@ describe('Call fetchVisualCrossingWeather should work correct', () => {
   });
 });
 
+function prepareData(
+  gen: Generator,
+  weatherAPI: WeatherAPI,
+  sameLocalityName: boolean,
+): void {
+  let stateCity;
+  let stateCountry;
+
+  if (sameLocalityName) {
+    stateCity = 'Gomel';
+    stateCountry = 'Belarus';
+  } else {
+    stateCity = null;
+    stateCountry = null;
+  }
+
+  expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'loading' })));
+  expect(gen.next().value).toEqual(select(geolocationSelectors.city));
+  expect(gen.next(stateCity).value).toEqual(select(geolocationSelectors.country));
+  expect(gen.next(stateCountry).value).toEqual(select(weatherSelectors.weatherAPI));
+}
+
 describe('Call weatherSaga should work correct', () => {
+  const latitude = 10;
+  const longitude = 20;
+
   it('Call weatherSaga with empty localityName', () => {
     const action: ReturnType<typeof weatherSagasAC.getWeather> = {
       type: weatherSagasActionsType.GET_WEATHER,
       payload: { localityName: EMPTY_STRING, weatherAPI: WeatherAPI.OPEN_WEATHER },
     };
-    const latitude = 10;
-    const longitude = 20;
 
     const gen = fetchWeather(action);
 
-    expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'loading' })));
-    expect(gen.next().value).toEqual(select(geolocationSelectors.city));
-    expect(gen.next().value).toEqual(select(geolocationSelectors.country));
-    expect(gen.next().value).toEqual(select(weatherSelectors.weatherAPI));
+    prepareData(gen, action.payload.weatherAPI, false);
+    expect(gen.next().value).toEqual(
+      call(checkIfGeolocationIsRequired, {
+        searchLocality: action.payload.localityName,
+        stateCity: null,
+        stateCountry: null,
+      }),
+    );
+    // @ts-ignore
+    expect(gen.next(true).value).toEqual(call(fetchGeolocation));
     expect(gen.next().value).toEqual(select(geolocationSelectors.latitude));
-    expect(gen.next().value).toEqual(select(geolocationSelectors.longitude));
-    expect(gen.next().value).toEqual(call(fetchGeolocation));
-    expect(gen.next().value).toEqual(select(geolocationSelectors.latitude));
-    expect(gen.next().value).toEqual(select(geolocationSelectors.longitude));
-    expect(gen.next({ latitude, longitude }).value).toEqual(
-      call(fetchOpenWeather, { latitude: 1, longitude: 2 }),
+    // @ts-ignore
+    expect(gen.next(latitude).value).toEqual(select(geolocationSelectors.longitude));
+    // @ts-ignore
+    expect(gen.next(longitude).value).toEqual(
+      call(fetchOpenWeather, { latitude, longitude }),
     );
 
-    // expect(gen.next().value).toEqual(
-    //   put(weatherAC.setWeatherAPI({ weatherAPI: action.payload.weatherAPI })),
-    // );
-    // expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'succeeded' })));
+    expect(gen.next().value).toEqual(
+      put(weatherAC.setWeatherAPI({ weatherAPI: action.payload.weatherAPI })),
+    );
+    expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'succeeded' })));
+    expect(gen.next().done).toBeTruthy();
+  });
+
+  it('Call weatherSaga with full localityName', () => {
+    const action: ReturnType<typeof weatherSagasAC.getWeather> = {
+      type: weatherSagasActionsType.GET_WEATHER,
+      payload: { localityName: 'Gomel', weatherAPI: WeatherAPI.OPEN_WEATHER },
+    };
+
+    const gen = fetchWeather(action);
+
+    prepareData(gen, action.payload.weatherAPI, false);
+    expect(gen.next().value).toEqual(
+      call(checkIfGeolocationIsRequired, {
+        searchLocality: action.payload.localityName,
+        stateCity: null,
+        stateCountry: null,
+      }),
+    );
+    // @ts-ignore
+    expect(gen.next(true).value).toEqual(
+      call(fetchGeolocation, { localityName: action.payload.localityName }),
+    );
+    expect(gen.next().value).toEqual(select(geolocationSelectors.latitude));
+    // @ts-ignore
+    expect(gen.next(latitude).value).toEqual(select(geolocationSelectors.longitude));
+    // @ts-ignore
+    expect(gen.next(longitude).value).toEqual(
+      call(fetchOpenWeather, { latitude, longitude }),
+    );
+
+    expect(gen.next().value).toEqual(
+      put(weatherAC.setWeatherAPI({ weatherAPI: action.payload.weatherAPI })),
+    );
+    expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'succeeded' })));
+    expect(gen.next().done).toBeTruthy();
+  });
+
+  it('Call weatherSaga with visualCrossingWeather and full localityName', () => {
+    const action: ReturnType<typeof weatherSagasAC.getWeather> = {
+      type: weatherSagasActionsType.GET_WEATHER,
+      payload: { localityName: 'Gomel', weatherAPI: WeatherAPI.VISUAL_CROSSING_WEATHER },
+    };
+
+    const gen = fetchWeather(action);
+
+    prepareData(gen, action.payload.weatherAPI, false);
+    expect(gen.next().value).toEqual(
+      call(checkIfGeolocationIsRequired, {
+        searchLocality: action.payload.localityName,
+        stateCity: null,
+        stateCountry: null,
+      }),
+    );
+    // @ts-ignore
+    expect(gen.next(true).value).toEqual(
+      call(fetchGeolocation, { localityName: action.payload.localityName }),
+    );
+    expect(gen.next().value).toEqual(select(geolocationSelectors.latitude));
+    // @ts-ignore
+    expect(gen.next(latitude).value).toEqual(select(geolocationSelectors.longitude));
+    // @ts-ignore
+    expect(gen.next(longitude).value).toEqual(
+      call(fetchVisualCrossingWeather, { latitude, longitude }),
+    );
+
+    expect(gen.next().value).toEqual(
+      put(weatherAC.setWeatherAPI({ weatherAPI: action.payload.weatherAPI })),
+    );
+    expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'succeeded' })));
+    expect(gen.next().done).toBeTruthy();
+  });
+
+  it('Call weatherSaga with same localityName', () => {
+    const action: ReturnType<typeof weatherSagasAC.getWeather> = {
+      type: weatherSagasActionsType.GET_WEATHER,
+      payload: { localityName: 'Gomel', weatherAPI: WeatherAPI.VISUAL_CROSSING_WEATHER },
+    };
+
+    const gen = fetchWeather(action);
+
+    prepareData(gen, action.payload.weatherAPI, true);
+    expect(gen.next().value).toEqual(
+      call(checkIfGeolocationIsRequired, {
+        searchLocality: action.payload.localityName,
+        stateCity: 'Gomel',
+        stateCountry: 'Belarus',
+      }),
+    );
+    expect(gen.next().value).toEqual(select(geolocationSelectors.latitude));
+    // @ts-ignore
+    expect(gen.next(latitude).value).toEqual(select(geolocationSelectors.longitude));
+    // @ts-ignore
+    expect(gen.next(longitude).value).toEqual(
+      call(fetchVisualCrossingWeather, { latitude, longitude }),
+    );
+
+    expect(gen.next().value).toEqual(
+      put(weatherAC.setWeatherAPI({ weatherAPI: action.payload.weatherAPI })),
+    );
+    expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'succeeded' })));
+    expect(gen.next().done).toBeTruthy();
   });
 });

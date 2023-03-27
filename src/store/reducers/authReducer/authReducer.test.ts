@@ -1,8 +1,4 @@
-import {
-  authAC,
-  AuthInitialState,
-  authReducer,
-} from 'store/reducers/authReducer/authReducer';
+import { authAC, AuthInitialState, authReducer } from 'store/reducers/authReducer';
 
 let startState: AuthInitialState;
 

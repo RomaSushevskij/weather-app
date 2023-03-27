@@ -1,1 +1,7 @@
-export { signOut, signIn, authWatcherSaga, authSagasAC } from './authSagas';
+export {
+  signOut,
+  signIn,
+  authWatcherSaga,
+  authSagasAC,
+  checkAuthorizationInfo,
+} from './authSagas';

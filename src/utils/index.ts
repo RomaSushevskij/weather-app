@@ -1,6 +1,5 @@
 export { getCurrentPosition } from './getCurrentPosition/getCurrentPosition';
 export type { GetPositionReturned } from './getCurrentPosition/getCurrentPosition';
-export { getDateNowInSeconds } from './getDateNowInSeconds/getDateNowInSeconds';
 export { roundTempValue } from './roundTempValue/roundTempValue';
 export { convertUnixToTime } from './convertUnixToTime/convertUnixToTime';
 export { convertUnixToWeekDay } from './convertUnixToWeekDay/convertUnixToWeekDay';
@@ -10,3 +9,4 @@ export { normalizeState } from './normalizeState/normalizeState';
 export { getWeatherWallpaperLink } from './getWeatherWallpaperLink/getWeatherWallpaperLink';
 export { getWeatherStyle } from './getWeatherStyle/getWeatherStyle';
 export type { StyleWeatherType } from './getWeatherStyle/getWeatherStyle';
+export { convertToUTCDate, getMyTimeZoneOffset } from './convertToUTCDate';

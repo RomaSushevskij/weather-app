@@ -1,10 +1,13 @@
-import { WeatherForecast, WeatherAPI } from 'store/reducers/weatherReducer/enums';
+import { getWeatherSettingFromLocalStorage } from 'services/localStorage';
 import {
+  WeatherAPI,
+  WeatherForecast,
   CurrentWeather,
   DailyWeather,
   HourlyWeather,
-} from 'store/reducers/weatherReducer/types';
+} from 'store/reducers/weatherReducer';
 import { PayloadAction } from 'store/types';
+import { Nullable } from 'types';
 
 enum WEATHER_ACTIONS_TYPE {
   SET_CURRENT_WEATHER = 'weather/SET_CURRENT_WEATHER',
@@ -41,6 +44,8 @@ export type WeatherActionsType =
   | ReturnType<typeof weatherAC.setForecastType>
   | ReturnType<typeof weatherAC.setWeatherAPI>;
 
+const weatherSetting = getWeatherSettingFromLocalStorage();
+
 const initialState = {
   currentWeather: {
     icon: null,
@@ -48,8 +53,9 @@ const initialState = {
   } as CurrentWeather,
   hourlyWeather: [] as HourlyWeather,
   dailyWeather: [] as DailyWeather,
-  weatherForecast: WeatherForecast.HOURLY,
-  weatherAPI: WeatherAPI.OPEN_WEATHER,
+  timeZoneOffset: null as Nullable<number>,
+  weatherForecast: weatherSetting?.weatherForecast || WeatherForecast.HOURLY,
+  weatherAPI: weatherSetting?.weatherAPI || WeatherAPI.OPEN_WEATHER,
 };
 
 export const weatherReducer = (

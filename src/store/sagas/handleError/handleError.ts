@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { call, CallEffect, put, PutEffect } from 'redux-saga/effects';
 
 import { errorMessages } from 'enum';
-import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
+import { appAC, AppActionsType } from 'store/reducers/appReducer';
 import { signOut } from 'store/sagas/authSagas';
 
 export type HandleErrorReturned = Generator<

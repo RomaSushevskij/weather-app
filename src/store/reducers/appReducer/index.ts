@@ -1,1 +1,2 @@
-export { appReducer } from './appReducer';
+export { appReducer, appAC } from './appReducer';
+export type { AppActionsType } from './appReducer';

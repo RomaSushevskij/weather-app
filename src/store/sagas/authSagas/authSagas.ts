@@ -2,12 +2,12 @@ import { call, CallEffect, put, PutEffect, takeLatest } from 'redux-saga/effects
 
 import { googleAPI } from 'api/googleAPI';
 import { GetEventsResponseData, GetUserInfoResponseData } from 'api/googleAPI/types';
-import { ACCESS_TOKEN } from 'services/localStorage/localStorage';
-import { appAC, AppActionsType } from 'store/reducers/appReducer/appReducer';
-import { authAC, AuthActionsType } from 'store/reducers/authReducer/authReducer';
-import { eventsAC, EventsActionsType } from 'store/reducers/eventsReducer/eventsReducer';
+import { ACCESS_TOKEN_KEY } from 'constantsGlobal';
+import { appAC, AppActionsType } from 'store/reducers/appReducer';
+import { authAC, AuthActionsType } from 'store/reducers/authReducer';
+import { eventsAC, EventsActionsType } from 'store/reducers/eventsReducer';
 import { fetchEvents } from 'store/sagas/eventsSagas';
-import { handleError } from 'store/sagas/handleError/handleError';
+import { handleError } from 'store/sagas/handleError';
 import { Action } from 'store/types';
 import { Nullable } from 'types';
 
@@ -39,7 +39,7 @@ export enum authActionsType {
 export function* checkAuthorizationInfo(): CheckAuthorizationInfoReturned {
   try {
     yield put(appAC.setStatus({ status: 'loading' }));
-    const accessToken = yield localStorage.getItem(ACCESS_TOKEN);
+    const accessToken = yield localStorage.getItem(ACCESS_TOKEN_KEY);
 
     if (accessToken) {
       yield call(signIn);
@@ -64,7 +64,7 @@ export function* signIn(): SignInReturned {
 }
 
 export function* signOut(): SignIOutReturned {
-  localStorage.removeItem(ACCESS_TOKEN);
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
   yield put(authAC.setEmail({ email: null }));
   yield put(authAC.setName({ name: null }));
   yield put(authAC.setIsLoggedIn({ isLoggedIn: false }));

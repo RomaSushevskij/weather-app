@@ -24,6 +24,7 @@ export type GetOpenWeatherResponseData = {
   current: CurrentWeather;
   daily: DayWeather[];
   hourly: HourWeather[];
+  timezone_offset: number;
 };
 
 export type GetOpenWeatherParams = {

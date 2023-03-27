@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ACCESS_TOKEN } from 'services/localStorage/localStorage';
+import { ACCESS_TOKEN_KEY } from 'constantsGlobal';
 
 export const geoApify = axios.create({
   baseURL: process.env.REACT_APP_GEO_APIFY_LINK,
@@ -36,7 +36,7 @@ export const googleCloud = axios.create({
 googleCloud.interceptors.request.use(config => {
   const configCopy = { ...config };
 
-  configCopy.headers.Authorization = `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`;
+  configCopy.headers.Authorization = `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`;
 
   return configCopy;
 });

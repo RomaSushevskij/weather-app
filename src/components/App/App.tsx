@@ -4,11 +4,10 @@ import style from './App.module.scss';
 
 import { Preloader, WeatherFrame } from 'components';
 import { SNACK_BAR_TYPES, SnackBar } from 'components/SnackBar';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { useFullHeight } from 'hooks/useFullHeight/useFullHeight';
-import { appAC } from 'store/reducers/appReducer/appReducer';
+import { useFullHeight, useAppDispatch, useAppSelector } from 'hooks';
+import { appAC } from 'store/reducers/appReducer';
 import { WeatherIcons } from 'store/reducers/weatherReducer';
-import { appSagasAC } from 'store/sagas/appSagas/appSagas';
+import { appSagasAC } from 'store/sagas/appSagas';
 import { appSelectors, weatherSelectors } from 'store/selectors';
 import { ReturnComponent } from 'types';
 import { getWeatherStyle, StyleWeatherType } from 'utils';

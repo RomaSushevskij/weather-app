@@ -2,9 +2,8 @@ import { AxiosError, AxiosResponseHeaders, InternalAxiosRequestConfig } from 'ax
 import { call, put } from 'redux-saga/effects';
 
 import { errorMessages } from 'enum';
-import { appAC } from 'store/reducers/appReducer/appReducer';
-import { signOut } from 'store/sagas/authSagas';
-import { handleError } from 'store/sagas/handleError/handleError';
+import { appAC } from 'store/reducers/appReducer';
+import { signOut, handleError } from 'store/sagas';
 import { Nullable } from 'types';
 
 describe('Call handle error should work correct', () => {
@@ -15,6 +14,7 @@ describe('Call handle error should work correct', () => {
 
     expect(gen.next().value).toEqual(put(appAC.setErrorMessage({ errorMessage })));
     expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'failed' })));
+    expect(gen.next().done).toBeTruthy();
   });
 
   it('Case with AxiosError 401 status code', () => {
@@ -32,6 +32,7 @@ describe('Call handle error should work correct', () => {
     expect(gen.next().value).toEqual(call(signOut));
     expect(gen.next().value).toEqual(put(appAC.setErrorMessage({ errorMessage })));
     expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'failed' })));
+    expect(gen.next().done).toBeTruthy();
   });
 
   it('Case with Error', () => {
@@ -41,6 +42,7 @@ describe('Call handle error should work correct', () => {
 
     expect(gen.next().value).toEqual(put(appAC.setErrorMessage({ errorMessage })));
     expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'failed' })));
+    expect(gen.next().done).toBeTruthy();
   });
 
   it('Case with some another errors', () => {
@@ -52,5 +54,6 @@ describe('Call handle error should work correct', () => {
       put(appAC.setErrorMessage({ errorMessage: error as unknown as Nullable<string> })),
     );
     expect(gen.next().value).toEqual(put(appAC.setStatus({ status: 'failed' })));
+    expect(gen.next().done).toBeTruthy();
   });
 });

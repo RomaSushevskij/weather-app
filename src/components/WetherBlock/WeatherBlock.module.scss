@@ -18,6 +18,9 @@
         content: '\00B0';
       }
     }
+    @media screen and (max-height: 600px) {
+      height: 70px;
+    }
   }
 
   &.current {

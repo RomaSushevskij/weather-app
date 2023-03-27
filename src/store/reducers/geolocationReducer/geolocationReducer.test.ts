@@ -2,8 +2,8 @@ import {
   geolocationAC,
   GeolocationInitialState,
   geolocationReducer,
-} from 'store/reducers/geolocationReducer/geolocationReducer';
-import { GeolocationData } from 'store/reducers/geolocationReducer/types';
+  GeolocationData,
+} from 'store/reducers/geolocationReducer';
 
 let startState: GeolocationInitialState;
 
