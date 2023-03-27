@@ -1,9 +1,11 @@
 import { AxiosError, AxiosResponseHeaders, InternalAxiosRequestConfig } from 'axios';
 import { call, put } from 'redux-saga/effects';
 
+import { handleError } from './handleError';
+
 import { errorMessages } from 'enum';
 import { appAC } from 'store/reducers/appReducer';
-import { signOut, handleError } from 'store/sagas';
+import { signOut } from 'store/sagas/authSagas';
 import { Nullable } from 'types';
 
 describe('Call handle error should work correct', () => {

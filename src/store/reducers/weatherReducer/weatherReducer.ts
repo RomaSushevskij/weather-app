@@ -1,11 +1,10 @@
 import { getWeatherSettingFromLocalStorage } from 'services/localStorage';
 import {
-  WeatherAPI,
-  WeatherForecast,
   CurrentWeather,
   DailyWeather,
   HourlyWeather,
 } from 'store/reducers/weatherReducer';
+import { WeatherAPI, WeatherForecast } from 'store/reducers/weatherReducer/enums';
 import { PayloadAction } from 'store/types';
 import { Nullable } from 'types';
 

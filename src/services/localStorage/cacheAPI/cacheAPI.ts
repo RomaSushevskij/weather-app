@@ -3,7 +3,7 @@ import {
   GetVisualCrossingWeatherParams,
   GetVisualCrossingWeatherResponseData,
 } from 'api/visualCrossingWeatherAPI';
-import { WeatherAPI } from 'store/reducers/weatherReducer';
+import { WeatherAPI } from 'store/reducers/weatherReducer/enums';
 
 const CACHE_EXPIRATION_MS = 3600000;
 

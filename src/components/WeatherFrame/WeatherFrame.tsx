@@ -21,12 +21,8 @@ import { InputClearBtn } from 'components/Input/InputClearBtn';
 import { ACCESS_TOKEN_KEY, EMPTY_STRING, NOW } from 'constantsGlobal';
 import { useInput, useAppDispatch, useAppSelector } from 'hooks';
 import { setWeatherSettingToLocalStorage } from 'services/localStorage';
-import {
-  weatherAC,
-  WeatherAPI,
-  WeatherForecast,
-  WeatherIcons,
-} from 'store/reducers/weatherReducer';
+import { weatherAC, WeatherIcons } from 'store/reducers/weatherReducer';
+import { WeatherAPI, WeatherForecast } from 'store/reducers/weatherReducer/enums';
 import { authSagasAC } from 'store/sagas/authSagas';
 import { weatherSagasAC } from 'store/sagas/weatherSagas/weatherSagas';
 import {

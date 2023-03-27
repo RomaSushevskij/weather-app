@@ -4,9 +4,7 @@ import { GetVisualCrossingWeatherResponseData } from 'api/visualCrossingWeatherA
 import { HOURS_IN_DAY, MS_IN_SECOND, SEC_IN_HOUR } from 'constantsGlobal';
 import { EventType } from 'store/reducers/eventsReducer';
 import { WeatherConditionState } from 'store/reducers/weatherReducer/weatherReducer';
-import { convertToUTCDate } from 'utils/convertToUTCDate/convertToUTCDate';
-import { normalizeWeatherIcon } from 'utils/normalizeWeatherIcon/normalizeWeatherIcon';
-import { roundTempValue } from 'utils/roundTempValue/roundTempValue';
+import { convertToUTCDate, normalizeWeatherIcon, roundTempValue } from 'utils';
 
 export const normalizeState = {
   openWeather(apiWeatherData: GetOpenWeatherResponseData): WeatherConditionState {

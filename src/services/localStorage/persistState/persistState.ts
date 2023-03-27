@@ -1,5 +1,5 @@
 import { Geolocation } from 'api/geocodeAPI/types';
-import { WeatherAPI, WeatherForecast } from 'store/reducers/weatherReducer';
+import { WeatherAPI, WeatherForecast } from 'store/reducers/weatherReducer/enums';
 
 type WeatherSetting = {
   weatherForecast: WeatherForecast;

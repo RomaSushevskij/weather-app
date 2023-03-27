@@ -6,6 +6,7 @@ export { convertUnixToWeekDay } from './convertUnixToWeekDay/convertUnixToWeekDa
 export { getWeatherIconLink } from './getWeatherIconLink/getWeatherIconLink';
 export { checkIfGeolocationIsRequired } from './checkIfGeolocationIsRequired/checkIfGeolocationIsRequired';
 export { normalizeState } from './normalizeState/normalizeState';
+export { normalizeWeatherIcon } from './normalizeWeatherIcon/normalizeWeatherIcon';
 export { getWeatherWallpaperLink } from './getWeatherWallpaperLink/getWeatherWallpaperLink';
 export { getWeatherStyle } from './getWeatherStyle/getWeatherStyle';
 export type { StyleWeatherType } from './getWeatherStyle/getWeatherStyle';

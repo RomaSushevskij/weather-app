@@ -3,7 +3,8 @@ import { memo } from 'react';
 import style from './WeatherList.module.scss';
 
 import { WeatherBlock } from 'components';
-import { WeatherData, WeatherForecast } from 'store/reducers/weatherReducer';
+import { WeatherData } from 'store/reducers/weatherReducer';
+import { WeatherForecast } from 'store/reducers/weatherReducer/enums';
 import { convertUnixToTime, convertUnixToWeekDay } from 'utils';
 
 type WeatherListProps = {

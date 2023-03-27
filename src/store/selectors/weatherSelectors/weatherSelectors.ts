@@ -1,10 +1,6 @@
 import { AppStateType } from 'store';
-import {
-  CurrentWeather,
-  WeatherForecast,
-  WeatherData,
-  WeatherAPI,
-} from 'store/reducers/weatherReducer';
+import { CurrentWeather, WeatherData } from 'store/reducers/weatherReducer';
+import { WeatherAPI, WeatherForecast } from 'store/reducers/weatherReducer/enums';
 import { Nullable } from 'types';
 
 export const weatherSelectors = {

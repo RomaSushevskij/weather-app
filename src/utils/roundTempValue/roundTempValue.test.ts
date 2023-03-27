@@ -1,4 +1,4 @@
-import { roundTempValue } from 'utils';
+import { roundTempValue } from './roundTempValue';
 
 test('The roundTempValue function should work correctly', () => {
   // eslint-disable-next-line no-magic-numbers

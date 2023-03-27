@@ -2,11 +2,13 @@ import { cloneableGenerator } from '@redux-saga/testing-utils';
 import { AxiosError } from 'axios';
 import { call, put } from 'redux-saga/effects';
 
+import { fetchEvents } from './eventsSagas';
+
 import { googleAPI } from 'api/googleAPI';
 import { GetEventsResponseData } from 'api/googleAPI/types';
 import { appAC } from 'store/reducers/appReducer';
-import { EventType, eventsAC } from 'store/reducers/eventsReducer';
-import { fetchEvents, handleError } from 'store/sagas';
+import { eventsAC, EventType } from 'store/reducers/eventsReducer';
+import { handleError } from 'store/sagas/handleError';
 import { normalizeState } from 'utils';
 
 describe('Call fetchEvents should work correct', () => {

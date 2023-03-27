@@ -6,14 +6,11 @@ import { EMPTY_STRING } from 'constantsGlobal';
 import { cacheAPI } from 'services/localStorage';
 import { appAC } from 'store/reducers/appReducer';
 import { GeolocationData } from 'store/reducers/geolocationReducer';
-import { WeatherAPI } from 'store/reducers/weatherReducer';
-import {
-  initializeApp,
-  checkAuthorizationInfo,
-  handleError,
-  fetchWeather,
-} from 'store/sagas';
-import { weatherSagasActionsType } from 'store/sagas/weatherSagas';
+import { WeatherAPI } from 'store/reducers/weatherReducer/enums';
+import { initializeApp } from 'store/sagas/appSagas';
+import { checkAuthorizationInfo } from 'store/sagas/authSagas';
+import { handleError } from 'store/sagas/handleError';
+import { fetchWeather, weatherSagasActionsType } from 'store/sagas/weatherSagas';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';
 
 describe('Call initializeApp should work correct', () => {

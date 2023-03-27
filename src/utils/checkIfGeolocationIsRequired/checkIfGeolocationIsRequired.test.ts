@@ -1,4 +1,4 @@
-import { checkIfGeolocationIsRequired } from 'utils';
+import { checkIfGeolocationIsRequired } from './checkIfGeolocationIsRequired';
 
 describe('The checkIfGeolocationIsRequired function should work correctly', () => {
   test('Returned value should be truthy', () => {

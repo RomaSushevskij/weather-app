@@ -17,11 +17,11 @@ import {
 import { GetVisualCrossingWeatherResponseData } from 'api/visualCrossingWeatherAPI';
 import { appAC, AppActionsType } from 'store/reducers/appReducer';
 import {
-  WeatherAPI,
   weatherAC,
   WeatherActionsType,
   WeatherConditionState,
 } from 'store/reducers/weatherReducer';
+import { WeatherAPI } from 'store/reducers/weatherReducer/enums';
 import { fetchGeolocation } from 'store/sagas/geolocationSagas';
 import { handleError } from 'store/sagas/handleError';
 import { geolocationSelectors, weatherSelectors } from 'store/selectors';

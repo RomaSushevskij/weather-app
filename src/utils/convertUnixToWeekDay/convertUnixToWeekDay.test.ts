@@ -1,4 +1,4 @@
-import { convertUnixToWeekDay } from 'utils';
+import { convertUnixToWeekDay } from './convertUnixToWeekDay';
 
 test('The convertUnixToWeekDay should work correctly', () => {
   // eslint-disable-next-line no-magic-numbers

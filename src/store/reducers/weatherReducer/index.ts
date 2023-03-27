@@ -4,5 +4,5 @@ export type {
   WeatherActionsType,
   WeatherConditionState,
 } from './weatherReducer';
-export { WeatherAPI, WeatherIcons, WeatherForecast } from './enums';
+export { WeatherIcons } from './enums';
 export type { CurrentWeather, WeatherData, HourlyWeather, DailyWeather } from './types';
