@@ -5,7 +5,7 @@ import {
 } from 'api/visualCrossingWeatherAPI';
 import { WeatherAPI } from 'store/reducers/weatherReducer/enums';
 
-const CACHE_EXPIRATION_MS = 3600000;
+const CACHE_EXPIRATION_MS = 3.6e6;
 
 type CachedData<T> = {
   metaData: T;
